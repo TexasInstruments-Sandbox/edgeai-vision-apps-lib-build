@@ -20,6 +20,7 @@ echo "REPO_LOCATION = $REPO_LOCATION"
 # copy files to be added while docker-build
 # requirement: git-pull edgeai-ti-proxy repo and source edgeai-ti-proxy/setup_proxy.sh
 DST_DIR=.
+cp -p ${SOC}-workarea/sdk_builder/scripts/setup_tools_apt.sh ${DST_DIR}
 mkdir -p $DST_DIR/proxy
 if [ -d "$HOME/proxy" ]; then
     cp -rp $HOME/proxy/* ${DST_DIR}/proxy

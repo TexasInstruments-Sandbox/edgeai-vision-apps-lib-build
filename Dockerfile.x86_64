@@ -56,11 +56,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release && \
     rm -rf /var/lib/apt/lists/*
 
-# download and install additional dependencies
+# install additional dependencies from the source pack
+# below work well with Docker 24.0, but not work with Docker 20.10
+# WORKDIR /opt/psdk-rtos
+# RUN --mount=type=bind,source=./${SOC}-workarea,target=/opt/psdk-rtos/${SOC}-workarea \
+#     cd ${SOC}-workarea && \
+#     bash ./sdk_builder/scripts/setup_tools_apt.sh
 WORKDIR /opt/psdk-rtos
-RUN --mount=type=bind,source=./${SOC}-workarea,target=/opt/psdk-rtos/${SOC}-workarea \
-    cd ${SOC}-workarea && \
-    bash ./sdk_builder/scripts/setup_tools_apt.sh
+ADD setup_tools_apt.sh /opt/psdk-rtos
+RUN ./setup_tools_apt.sh
 
 #=========================================================================
 # add scripts

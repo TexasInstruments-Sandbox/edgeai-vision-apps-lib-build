@@ -74,13 +74,16 @@ else
     echo "$WORKAREA already exists."
 fi
 
-# Install the ARM compile tools
-PSDK_TOOLS_PATH=${SCRIPT_DIR}/psdk-tools
-if [ ! -d $PSDK_TOOLS_PATH ]; then
-    mkdir -p $PSDK_TOOLS_PATH
-    cd $WORKAREA
-    PSDK_TOOLS_PATH=${PSDK_TOOLS_PATH} SOC=${SOC} TISDK_IMAGE=${TISDK_IMAGE} ./sdk_builder/scripts/setup_tools_arm.sh
-else
-    echo "$PSDK_TOOLS_PATH already exists."
+ARCH=`arch`
+if [ "$ARCH" == "x86_64" ]; then
+    # Install the ARM compile tools
+    PSDK_TOOLS_PATH=${SCRIPT_DIR}/psdk-tools
+    if [ ! -d $PSDK_TOOLS_PATH ]; then
+        mkdir -p $PSDK_TOOLS_PATH
+        cd $WORKAREA
+        PSDK_TOOLS_PATH=${PSDK_TOOLS_PATH} SOC=${SOC} TISDK_IMAGE=${TISDK_IMAGE} ./sdk_builder/scripts/setup_tools_arm.sh
+    else
+        echo "$PSDK_TOOLS_PATH already exists."
+    fi
 fi
 cd $SCRIPT_DIR
