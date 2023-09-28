@@ -29,5 +29,6 @@ SOC=j721e ./docker_run_aarch64.sh
 
 ### lib build in the container
 ```
+cd sdk_builder
 GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO="" TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 ```

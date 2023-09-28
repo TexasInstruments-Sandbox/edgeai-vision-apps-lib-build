@@ -1,13 +1,12 @@
+ARG ARCH
+ARG BASE_IMAGE
 ARG USE_PROXY
 ARG HTTP_PROXY
-ARG REPO_LOCATION
 ARG SOC
 ARG DEBIAN_FRONTEND=noninteractive
 
 #=========================================================================
-# The environment variable REPO_LOCATION is set from outside as needed,
-# based on network
-FROM ${REPO_LOCATION}ubuntu:22.04 AS base-0
+FROM --platform=linux/${ARCH} ${BASE_IMAGE} AS base-0
 
 #=========================================================================
 FROM base-0 AS base-1
@@ -68,7 +67,7 @@ RUN ./setup_tools_apt.sh
 
 #=========================================================================
 # add scripts
-COPY entrypoint_x86_64.sh /root/entrypoint.sh
+COPY entrypoint.sh /root/entrypoint.sh
 
 # .profile and .bashrc
 WORKDIR /root
