@@ -14,6 +14,12 @@ if [ "$ARCH" == "arm64" ]; then
 fi
 echo "BASE_IMAGE = $BASE_IMAGE"
 
+UBUNTU_1804=0
+if [ "$ARCH" == "18.04" ]; then
+    UBUNTU_1804=1
+fi
+echo "UBUNTU_1804 = $UBUNTU_1804"
+
 DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${UBUNTU_VER}-${SOC}
 echo "DOCKER_TAG = $DOCKER_TAG"
 
@@ -42,6 +48,7 @@ DOCKER_BUILDKIT=1 docker build \
     --build-arg USE_PROXY=$USE_PROXY \
     --build-arg HTTP_PROXY=$HTTP_PROXY \
     --build-arg SOC=$SOC \
+    --build-arg UBUNTU_1804=$UBUNTU_1804 \
     --progress=plain \
     -f Dockerfile $DST_DIR
 echo "Docker build -t $DOCKER_TAG completed!"

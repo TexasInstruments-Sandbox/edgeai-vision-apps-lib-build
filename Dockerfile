@@ -4,6 +4,7 @@ ARG USE_PROXY
 ARG HTTP_PROXY
 ARG SOC
 ARG DEBIAN_FRONTEND=noninteractive
+ARG UBUNTU_1804
 
 #=========================================================================
 FROM --platform=linux/${ARCH} ${BASE_IMAGE} AS base-0
@@ -19,6 +20,8 @@ ENV https_proxy=${HTTP_PROXY}
 #=========================================================================
 FROM base-${USE_PROXY}
 ARG DEBIAN_FRONTEND
+ARG UBUNTU_1804
+ARG FIRMWARE_ONLY
 ARG SOC
 ENV SOC=${SOC}
 ENV LANG=C.UTF-8
@@ -61,9 +64,54 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # RUN --mount=type=bind,source=./${SOC}-workarea,target=/opt/psdk-rtos/${SOC}-workarea \
 #     cd ${SOC}-workarea && \
 #     bash ./sdk_builder/scripts/setup_tools_apt.sh
-WORKDIR /opt/psdk-rtos
-ADD setup_tools_apt.sh /opt/psdk-rtos
-RUN ./setup_tools_apt.sh
+
+# WORKDIR /opt/psdk-rtos
+# ADD setup_tools_apt.sh /opt/psdk-rtos
+# RUN ./setup_tools_apt.sh
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    unzip \
+    build-essential \
+    git \
+    curl \
+    python3-distutils \
+    libtinfo5 \
+    bison \
+    flex \
+    swig \
+    u-boot-tools && \
+    if [ ${UBUNTU_1804} -eq 0 ]; then \
+        apt-get update && apt-get install -y --no-install-recommends \
+        # libc6-i386: available only on amd64 ubuntu, not on arm64 ubuntu
+        # installing libc6-i386-amd64-cross instead
+        # libc6-i386; \
+        libc6-i386-amd64-cross; \
+    fi && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    mono-runtime \
+    cmake \
+    ninja-build \
+    pkgconf \
+    graphviz \
+    graphviz-dev \
+    python3-pyelftools && \
+    if [ ${UBUNTU_1804} -eq 0 ]; then \
+        apt-get install -y --no-install-recommends \
+        # python3-pip \
+        python3-setuptools \
+        libprotobuf-dev \
+        protobuf-compiler \
+        libprotoc-dev; \
+    fi && \
+    rm -rf /var/lib/apt/lists/*
+
+# Somehow keep retrying to connect pypi.python.org in TI network then time out
+# RUN python3 -m pip install \
+#     pycryptodomex \
+#     meson \
+#     jsonschema
 
 #=========================================================================
 # add scripts

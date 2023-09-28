@@ -4,6 +4,9 @@ set -e
 # setup proxy as required
 source /root/setup_proxy.sh
 
+# arch
+echo "`arch`"
+
 # Ubuntu version
 UBUNTU_VER=$(lsb_release -r | cut -f2)
 echo "Ubuntu $UBUNTU_VER"
