@@ -82,9 +82,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     u-boot-tools && \
     if [ ${UBUNTU_1804} -eq 0 ]; then \
         apt-get update && apt-get install -y --no-install-recommends \
-        # libc6-i386: available only on amd64 ubuntu, not on arm64 ubuntu
+        # libc6-i386 is not available on arm64v8/ubuntu
         # installing libc6-i386-amd64-cross instead
-        # libc6-i386; \
         libc6-i386-amd64-cross; \
     fi && \
     rm -rf /var/lib/apt/lists/*

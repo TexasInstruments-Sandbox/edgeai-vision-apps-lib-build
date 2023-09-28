@@ -33,11 +33,15 @@ echo "USE_PROXY = $USE_PROXY"
 # copy files to be added while docker-build
 # requirement: git-pull edgeai-ti-proxy repo and source edgeai-ti-proxy/setup_proxy.sh
 DST_DIR=.
-cp -p ${SOC}-workarea/sdk_builder/scripts/setup_tools_apt.sh ${DST_DIR}
 mkdir -p $DST_DIR/proxy
-if [ -d "$HOME/proxy" ]; then
-    cp -rp $HOME/proxy/* ${DST_DIR}/proxy
+PROXY_DIR=$HOME/proxy
+if [ "`arch`" == "aarch64" ]; then
+    PROXY_DIR=/opt/proxy
 fi
+if [ -d "$PROXY_DIR" ]; then
+    cp -rp $PROXY_DIR/* ${DST_DIR}/proxy
+fi
+# cp -p ${SOC}-workarea/sdk_builder/scripts/setup_tools_apt.sh ${DST_DIR}
 
 # docker-build
 SECONDS=0
@@ -54,4 +58,6 @@ DOCKER_BUILDKIT=1 docker build \
 echo "Docker build -t $DOCKER_TAG completed!"
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed."
-# rm -rf $DST_DIR
+
+rm -rf ${DST_DIR}/proxy
+# rm ${DST_DIR}/setup_tools_apt.sh
