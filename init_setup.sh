@@ -13,7 +13,7 @@ PSDKL_VER=09.00.00.08
 if [ "$TISDK_IMAGE" == "edgeai" ]; then
     URL_TAG=MD-4K6R4tqhZI
 else
-    echo "URL_TAG noe defined for TISDK_IMAGE=$TISDK_IMAGE"
+    echo "URL_TAG not defined for TISDK_IMAGE=$TISDK_IMAGE"
 fi
 
 if [ ! -d $WORKAREA ]; then
@@ -38,6 +38,8 @@ if [ ! -d $WORKAREA ]; then
     for File in ${Files[@]}; do
 	    cp patches/sdk_builder/scripts/${File} ${WORKAREA}/sdk_builder/scripts/${File}
     done
+    # remove the 'u' flag for AR to avoid warning messages in aarch64 Ubuntu container
+    cp patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
 
     # download and install PSDK Linux target FS and boot image
     # edgeai: https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-SK-TDA4VM/09.00.00.08
@@ -74,8 +76,8 @@ else
     echo "$WORKAREA already exists."
 fi
 
-ARCH=`arch`
-if [ "$ARCH" == "x86_64" ]; then
+HOST_ARCH=`arch`
+if [ "$HOST_ARCH" == "x86_64" ]; then
     # Install the ARM compile tools
     PSDK_TOOLS_PATH=${SCRIPT_DIR}/psdk-tools
     if [ ! -d $PSDK_TOOLS_PATH ]; then

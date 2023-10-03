@@ -1,8 +1,8 @@
 #!/bin/bash
 # ARCH: amd64 (for x86_64) or arm64 (for aarch64)
-: ${ARCH=amd64}
+: "${ARCH:=amd64}"
 # Ubuntu version: 20.04 or 22.04
-: ${UBUNTU_VER=22.04}
+: "${UBUNTU_VER:=22.04}"
 
 : "${USE_PROXY:=0}"
 : "${SOC:=j721e}"
