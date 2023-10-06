@@ -35,5 +35,6 @@ docker run -it --rm \
     --network host \
     --env USE_PROXY=$USE_PROXY \
     --env SOC=$SOC \
+    --env ARCH=$ARCH \
       $DOCKER_TAG $CMD
 fi

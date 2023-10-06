@@ -25,9 +25,9 @@ if [ ! -d $WORKAREA ]; then
     # pull PDK repo => TODO
     git clone --single-branch --branch ${PDK_TAG} git://git.ti.com/processor-sdk/pdk.git pdk
 
-    # apply fixes to setup_psdk_rtos.sh => TODO
+    # apply fixes/workarounds. Modular scripts from setup_psdk_rtos.sh => TODO
     cd $SCRIPT_DIR
-    cp patches/sdk_builder/makerules/makefile_linux_arm.mak ${WORKAREA}/sdk_builder/makerules/makefile_linux_arm.mak
+    cp patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
     Files=(
         setup_psdk_rtos.sh
         setup_tools_apt.sh

@@ -200,6 +200,15 @@ $(_MODULE)_CPLDFLAGS := $(foreach ldf,$($(_MODULE)_LDFLAGS),-Wl,$(ldf)) $($(_MOD
 $(_MODULE)_CFLAGS   := -c $($(_MODULE)_INCLUDES) $($(_MODULE)_DEFINES) $($(_MODULE)_COPT) $(CFLAGS)
 $(_MODULE)_CPPFLAGS := $(CPPFLAGS)
 
+ARCH_LOCAL := $(shell uname -m)
+ifeq ($(ARCH_LOCAL),aarch64)
+$(_MODULE)_LDFLAGS  += -L/usr/lib/aarch64-linux-gnu/
+$(_MODULE)_CFLAGS   += -L/usr/lib/aarch64-linux-gnu/
+$(_MODULE)_CFLAGS   += -I/usr/include/aarch64-linux-gnu/
+$(_MODULE)_CPPFLAGS += -L/usr/lib/aarch64-linux-gnu/
+$(_MODULE)_CPPFLAGS += -I/usr/include/aarch64-linux-gnu/
+endif
+
 ifneq ($(LINUX_SYSROOT_ARM),)
 $(_MODULE)_LDFLAGS   += --sysroot=$(LINUX_SYSROOT_ARM)
 $(_MODULE)_CPLDFLAGS += --sysroot=$(LINUX_SYSROOT_ARM)

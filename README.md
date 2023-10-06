@@ -7,6 +7,16 @@ Support the following two cases:
 
 ## Prerequisite
 
+## docker-pull the base Docker image
+
+Pull the Docker image needed. Assuming outside of a proxy network,
+```
+docker pull ubuntu:22.04
+docker pull ubuntu:20.04
+docker pull arm64v8/ubuntu:22.04
+docker pull arm64v8/ubuntu:20.04
+```
+
 ### repo tool
 
 ```
@@ -17,7 +27,7 @@ chmod a+rx ~/bin/repo
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
 
-## Excercise: Cross-compiling on x86_64 build machine in Ubuntu Docker container
+## Cross-compiling on x86_64 build machine in Ubuntu Docker container
 
 Target for lib deployment: Yocto PSDK-Linux
 
@@ -43,7 +53,6 @@ ARCH=amd64 UBUNTU_VER=22.04 SOC=j721e ./docker_run.sh
 ### Build in the container
 
 ```
-cd sdk_builder
 make yocto_build
 ```
 
@@ -86,9 +95,11 @@ ARCH=arm64 UBUNTU_VER=20.04 SOC=j721e ./docker_run.sh
 ### Build in the container
 
 ```
-cd sdk_builder
-GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO="" TREAT_WARNINGS_AS_ERROR=0 make yocto_build
+GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 ```
+
+`vision_apps.so` location:
+`${SOC}-workarea/vision_apps/out/J721E/A72/LINUX/release/tivision_apps.so.9.0.0`
 
 ### Trial Results
 
@@ -99,8 +110,8 @@ On the target:
 
 | Target Ubuntu distro | Results  |
 | -------------------- | -------- |
-| Ubuntu 22.04         | all .so and .out built |
-| Ubuntu 20.04         | .so built. link errors for some of openvx-conformance test |
+| Ubuntu 22.04         | vision_apps.so succefully built. |
+| Ubuntu 20.04         | vision_apps.so succefully built. |
 
 ## Some Workarounds and Fixes
 

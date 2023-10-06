@@ -19,6 +19,7 @@ ENV https_proxy=${HTTP_PROXY}
 
 #=========================================================================
 FROM base-${USE_PROXY}
+ARG ARCH
 ARG DEBIAN_FRONTEND
 ARG UBUNTU_1804
 ARG FIRMWARE_ONLY
@@ -41,7 +42,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # intsall utils and miscellaneous packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
-    curl \
     vim \
     tmux \
     gdb \
@@ -55,7 +55,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nfs-common \
     corkscrew \
     sudo \
-    lsb-release && \
+    lsb-release \
+    autoconf \
+    automake \
+    libtool \
+    openssh-client && \
     rm -rf /var/lib/apt/lists/*
 
 # install additional dependencies from the source pack
@@ -107,10 +111,29 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Somehow keep retrying to connect pypi.python.org in TI network then time out
-# RUN python3 -m pip install \
-#     pycryptodomex \
-#     meson \
-#     jsonschema
+RUN python3 -m pip install \
+    pycryptodomex \
+    meson \
+    jsonschema
+
+# install libGLESv2, libEGL, libgbm
+RUN if [ "${ARCH}" = "arm64" ]; then \
+        apt-get update && apt-get install -y --no-install-recommends \
+        libgles2-mesa-dev \
+        libegl-dev \
+        libgbm-dev; \
+    fi
+
+# build and install ti-rpmsg-char
+# TODO: package .so and headers
+WORKDIR /opt
+RUN if [ "${ARCH}" = "arm64" ]; then \
+        git clone git://git.ti.com/rpmsg/ti-rpmsg-char.git && \
+        cd /opt/ti-rpmsg-char && \
+        autoreconf -i && ./configure --host=aarch64-none-linux-gnu --prefix=/usr && \
+        make && make install && \
+        rm -rf /opt/ti-rpmsg-char; \
+    fi
 
 #=========================================================================
 # add scripts
