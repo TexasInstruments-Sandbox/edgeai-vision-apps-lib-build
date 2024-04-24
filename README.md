@@ -128,7 +128,7 @@ GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=
 ```
 
 `vision_apps.so` location:
-`${SOC}-workarea/vision_apps/out/J721E/A72/LINUX/release/tivision_apps.so.9.0.0`
+`${SOC}-workarea/vision_apps/out/J721E/A72/LINUX/release/libtivision_apps.so.<ver>`
 
 ## Workarounds and Fixes
 

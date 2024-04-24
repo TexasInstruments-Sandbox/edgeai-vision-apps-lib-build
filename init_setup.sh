@@ -6,15 +6,31 @@ TISDK_IMAGE=edgeai
 WORKAREA=$SCRIPT_DIR/${SOC}-workarea
 
 # pull the source repos
-REPO_TAG=REL.PSDK.ANALYTICS.09.00.00.01
-PDK_TAG=REL.PSDK.09.00.00.45
-PSDKL_VER=09.00.00.08
-# below seems changing in each release
-if [ "$TISDK_IMAGE" == "edgeai" ]; then
-    URL_TAG=MD-4K6R4tqhZI
-else
-    echo "URL_TAG not defined for TISDK_IMAGE=$TISDK_IMAGE"
+# https://git.ti.com/cgit/processor-sdk/psdk_repo_manifests/refs/?h=main
+REPO_TAG=REL.PSDK.ANALYTICS.09.00.01.01
+# PDK_TAG=REL.PSDK.09.00.00.45
+
+# targetfs and rootfs info
+# http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/
+PSDK_LINUX_VERSION=09_00_01_03
+
+DEVICE_PLATFORM=${SOC}
+if [ ${SOC} = "j721e" ]; then
+    DEVICE_NAME=TDA4VM
+elif [ ${SOC} = "j721s2" ]; then
+    DEVICE_NAME=AM68A
+elif [ ${SOC} = "j722s" ]; then
+    DEVICE_NAME=AM67A
+elif [ ${SOC} = "j784s4" ]; then
+    DEVICE_NAME=AM69A
+elif [ ${SOC} = "am62a" ]; then
+    DEVICE_NAME=AM62A
+    DEVICE_PLATFORM="am62axx"
 fi
+
+PSDK_LINUX_ROOTFS=tisdk-${TISDK_IMAGE}-image-${DEVICE_PLATFORM}-evm.tar.xz
+PSDK_LINUX_BOOTFS=boot-${TISDK_IMAGE}-${DEVICE_PLATFORM}-evm.tar.gz
+PSDK_LINUX_WEBLINK=http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/${PSDK_LINUX_VERSION}/exports
 
 if [ ! -d $WORKAREA ]; then
     mkdir -p $WORKAREA
@@ -22,8 +38,8 @@ if [ ! -d $WORKAREA ]; then
     repo init -u git://git.ti.com/processor-sdk/psdk_repo_manifests.git -b refs/tags/${REPO_TAG} -m vision_apps_yocto.xml
     repo sync
 
-    # pull PDK repo => TODO
-    git clone --single-branch --branch ${PDK_TAG} git://git.ti.com/processor-sdk/pdk.git pdk
+    # pull PDK repo: only required to set env variables
+    # git clone --single-branch --branch ${PDK_TAG} git://git.ti.com/processor-sdk/pdk.git pdk
 
     # apply fixes/workarounds. Modular scripts from setup_psdk_rtos.sh => TODO
     cd $SCRIPT_DIR
@@ -42,32 +58,27 @@ if [ ! -d $WORKAREA ]; then
     cp patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
 
     # download and install PSDK Linux target FS and boot image
-    # edgeai: https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-SK-TDA4VM/09.00.00.08
-    PSDK_LINUX_ROOTFS=tisdk-${TISDK_IMAGE}-image-${SOC}-evm.tar.xz
-    PSDK_LINUX_BOOTFS=boot-${TISDK_IMAGE}-${SOC}-evm.tar.gz
-    URL_HEAD=https://dr-download.ti.com/software-development/software-development-kit-sdk
-
     cd $WORKAREA
     echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Checking ..."
     if [ ! -d targetfs ]; then
-        wget ${URL_HEAD}/${URL_TAG}/${PSDKL_VER}/${PSDK_LINUX_ROOTFS}
+        wget ${PSDK_LINUX_WEBLINK}/${PSDK_LINUX_ROOTFS}
         if [ -f ${PSDK_LINUX_ROOTFS} ]; then
             echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Installing files ..."
-            mkdir targetfs
+            mkdir -p targetfs
             tar xf ${PSDK_LINUX_ROOTFS} -C targetfs/
-            rm ${PSDK_LINUX_ROOTFS}
+            # rm ${PSDK_LINUX_ROOTFS}
         fi
     fi
     echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Done "
 
     echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Checking ... "
     if [ ! -d bootfs ]; then
-        wget ${URL_HEAD}/${URL_TAG}/${PSDKL_VER}/${PSDK_LINUX_BOOTFS}
+        wget ${PSDK_LINUX_WEBLINK}/${PSDK_LINUX_BOOTFS}
         if [ -f ${PSDK_LINUX_BOOTFS} ]; then
             echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Installing files ..."
-            mkdir bootfs
+            mkdir -p bootfs
             tar xf ${PSDK_LINUX_BOOTFS} -C bootfs/
-            rm ${PSDK_LINUX_BOOTFS}
+            # rm ${PSDK_LINUX_BOOTFS}
         fi
     fi
     echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Done "
