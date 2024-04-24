@@ -15,15 +15,15 @@ REPO_TAG=REL.PSDK.ANALYTICS.09.00.01.01
 PSDK_LINUX_VERSION=09_00_01_03
 
 DEVICE_PLATFORM=${SOC}
-if [ ${SOC} = "j721e" ]; then
+if [ "${SOC}" == "j721e" ]; then
     DEVICE_NAME=TDA4VM
-elif [ ${SOC} = "j721s2" ]; then
+elif [ "${SOC}" == "j721s2" ]; then
     DEVICE_NAME=AM68A
-elif [ ${SOC} = "j722s" ]; then
+elif [ "${SOC}" == "j722s" ]; then
     DEVICE_NAME=AM67A
-elif [ ${SOC} = "j784s4" ]; then
+elif [ "${SOC}" == "j784s4" ]; then
     DEVICE_NAME=AM69A
-elif [ ${SOC} = "am62a" ]; then
+elif [ "${SOC}" == "am62a" ]; then
     DEVICE_NAME=AM62A
     DEVICE_PLATFORM="am62axx"
 fi
@@ -61,7 +61,7 @@ if [ ! -d $WORKAREA ]; then
     cd $WORKAREA
     echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Checking ..."
     if [ ! -d targetfs ]; then
-        wget ${PSDK_LINUX_WEBLINK}/${PSDK_LINUX_ROOTFS}
+        curl -O ${PSDK_LINUX_WEBLINK}/${PSDK_LINUX_ROOTFS}
         if [ -f ${PSDK_LINUX_ROOTFS} ]; then
             echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Installing files ..."
             mkdir -p targetfs
@@ -73,7 +73,7 @@ if [ ! -d $WORKAREA ]; then
 
     echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Checking ... "
     if [ ! -d bootfs ]; then
-        wget ${PSDK_LINUX_WEBLINK}/${PSDK_LINUX_BOOTFS}
+        curl -O ${PSDK_LINUX_WEBLINK}/${PSDK_LINUX_BOOTFS}
         if [ -f ${PSDK_LINUX_BOOTFS} ]; then
             echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Installing files ..."
             mkdir -p bootfs
