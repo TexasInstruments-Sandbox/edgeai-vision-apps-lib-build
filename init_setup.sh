@@ -8,13 +8,13 @@ WORKAREA=$SCRIPT_DIR/${SOC}-workarea
 
 # pull the source repos
 # https://git.ti.com/cgit/processor-sdk/psdk_repo_manifests/refs/?h=main
-REPO_TAG=REL.PSDK.ANALYTICS.09.00.01.01
-# REPO_TAG=REL.PSDK.ANALYTICS.09.02.00.05
+# REPO_TAG=REL.PSDK.ANALYTICS.09.00.01.01
+REPO_TAG=REL.PSDK.ANALYTICS.09.02.00.05
 
 # targetfs and rootfs info
 # http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/
-PSDK_LINUX_VERSION=09_00_01_03
-# PSDK_LINUX_VERSION=09_02_00_05
+# PSDK_LINUX_VERSION=09_00_01_03
+PSDK_LINUX_VERSION=09_02_00_05
 
 DEVICE_PLATFORM=${SOC}
 if [ "${SOC}" == "j721e" ]; then
@@ -101,11 +101,11 @@ if [ ! -d $WORKAREA ]; then
     # Modular scripts prepared for SDK 9.0
     cd $SCRIPT_DIR
     Files=(
-        setup_psdk_rtos.sh
-        setup_tools_apt.sh
+        # setup_psdk_rtos.sh
+        # setup_tools_apt.sh
         setup_tools_arm.sh # only this is used in this build system
-        setup_tools_cgt.sh
-        setup_tools_misc.sh
+        # setup_tools_cgt.sh
+        # setup_tools_misc.sh
     )
     for File in ${Files[@]}; do
         copy_and_backup patches/sdk_builder/scripts/${File} ${WORKAREA}/sdk_builder/scripts/${File}

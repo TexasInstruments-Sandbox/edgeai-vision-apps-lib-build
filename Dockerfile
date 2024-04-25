@@ -99,7 +99,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkgconf \
     graphviz \
     graphviz-dev \
-    python3-pyelftools && \
+    python3-pyelftools \
+    libncurses5 && \
     if [ ${UBUNTU_1804} -eq 0 ]; then \
         apt-get install -y --no-install-recommends \
         # python3-pip \

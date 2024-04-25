@@ -6,7 +6,7 @@
 
 : "${USE_PROXY:=0}"
 : "${SOC:=j721e}"
-SDK_VER=9.0.0
+SDK_VER=9.2.0
 
 BASE_IMAGE=ubuntu:${UBUNTU_VER}
 if [ "$ARCH" == "arm64" ]; then

@@ -6,7 +6,7 @@
 
 : "${USE_PROXY:=0}"
 : "${SOC:=j721e}"
-SDK_VER=9.0.0
+SDK_VER=9.2.0
 
 DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${UBUNTU_VER}-${SOC}
 echo "DOCKER_TAG = $DOCKER_TAG"
