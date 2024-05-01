@@ -31,6 +31,7 @@ fi
 if [ "$ARCH" == "arm64" ]; then
 docker run -it --rm \
     -v ${PWD}/${SOC}-workarea:/opt/psdk-rtos/${SOC}-workarea \
+    -v ${PWD}/patches/targetfs:/opt/psdk-rtos/patches/targetfs \
     --privileged \
     --network host \
     --env USE_PROXY=$USE_PROXY \

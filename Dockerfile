@@ -117,12 +117,14 @@ RUN python3 -m pip install \
     meson \
     jsonschema
 
-# install libGLESv2, libEGL, libgbm
+# install libGLESv2, libEGL, libgbm-dev, libglm-dev, libdrm-dev
 RUN if [ "${ARCH}" = "arm64" ]; then \
         apt-get update && apt-get install -y --no-install-recommends \
         libgles2-mesa-dev \
         libegl-dev \
-        libgbm-dev; \
+        libgbm-dev \
+        libglm-dev \
+        libdrm-dev; \
     fi
 
 # build and install ti-rpmsg-char
@@ -149,7 +151,7 @@ RUN echo "if [ -n \"$BASH_VERSION\" ]; then"     >  .profile && \
     echo "    fi"                                >> .profile && \
     echo "fi"                                    >> .profile && \
     echo "#!/bin/bash"                           >  .bashrc  && \
-    echo "export PS1=\"${debian_chroot:+($debian_chroot)}\u@pc-docker:\w\$ \"" >> .bashrc
+    echo "export PS1=\"${debian_chroot:+($debian_chroot)}\u@docker:\w\$ \"" >> .bashrc
 
 WORKDIR /opt/psdk-rtos
 

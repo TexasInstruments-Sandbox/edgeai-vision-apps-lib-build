@@ -2,6 +2,12 @@
 set -e
 SCRIPT_DIR=$PWD
 
+# archtecture of the host machine
+HOST_ARCH=`arch`
+
+# archtecture for the Docker container
+: "${ARCH:=amd64}"
+
 : "${SOC:=j721e}"
 TISDK_IMAGE=edgeai
 WORKAREA=$SCRIPT_DIR/${SOC}-workarea
@@ -114,14 +120,15 @@ if [ ! -d $WORKAREA ]; then
     copy_and_backup patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
 
     # download and install PSDK Linux target FS and boot image
-    download_targetfs
-    download_rootfs
+    if [ "$ARCH" == "amd64" ]; then
+        download_targetfs
+        download_rootfs
+    fi
 
 else
     echo "$WORKAREA already exists."
 fi
 
-HOST_ARCH=`arch`
 if [ "$HOST_ARCH" == "x86_64" ]; then
     # Install the ARM compile tools
     PSDK_TOOLS_PATH=${SCRIPT_DIR}/psdk-tools

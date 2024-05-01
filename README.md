@@ -65,7 +65,7 @@ This has the same goal as the PSDK-RTOS workarea build system except doing in Ub
 ### initial setup: install source repos and compiler tools
 
 ```
-SOC=j721e ./init_setup.sh
+ARCH=amd64 SOC=j721e ./init_setup.sh
 ```
 
 ### Docker-build
@@ -98,7 +98,7 @@ Target for lib deployment:
 ### initial setup: install source repos
 
 ```
-SOC=j721e ./init_setup.sh
+ARCH=arm64 SOC=j721e ./init_setup.sh
 ```
 
 ### Docker-build
