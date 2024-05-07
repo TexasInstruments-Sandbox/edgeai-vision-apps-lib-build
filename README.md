@@ -33,7 +33,7 @@ Docker-based build system for vision_apps library (extendable to other PSDK-RTOS
 ### docker-pull the base Docker image
 
 Pull the Docker image needed. Assuming outside of a proxy network,
-```
+```bash
 docker pull ubuntu:22.04
 docker pull ubuntu:20.04
 docker pull arm64v8/ubuntu:22.04
@@ -42,12 +42,18 @@ docker pull arm64v8/ubuntu:20.04
 
 ### repo tool
 
-```
+```bash
 mkdir -p ~/bin
 PATH="${HOME}/bin:${PATH}"
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+rx ~/bin/repo
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+```
+
+Ensure that the following basic git configuration is complete, particularly for `repo init` to function as part of `init_setup.sh`.
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 ```
 
 ### edgeai-ti-proxy
@@ -64,24 +70,25 @@ This has the same goal as the PSDK-RTOS workarea build system except doing in Ub
 
 ### initial setup: install source repos and compiler tools
 
-```
-ARCH=amd64 SOC=j721e ./init_setup.sh
+```bash
+ARCH=amd64 UBUNTU_VER=22.04 SOC=j721e ./init_setup.sh
 ```
 
 ### Docker-build
 
-```
+```bash
 ARCH=amd64 UBUNTU_VER=22.04 SOC=j721e ./docker_build.sh
 ```
 
 ### Docker-run
 
-```
+```bash
 ARCH=amd64 UBUNTU_VER=22.04 SOC=j721e ./docker_run.sh
 ```
+
 ### Build in the container
 
-```
+```bash
 make yocto_build
 ```
 
@@ -97,33 +104,36 @@ Target for lib deployment:
 
 ### initial setup: install source repos
 
-```
-ARCH=arm64 SOC=j721e ./init_setup.sh
+Depending on the Ubuntu distro for the target docker container, run one of these:
+```bash
+ARCH=arm64 UBUNTU_VER=22.04 SOC=j721e ./init_setup.sh
+ARCH=arm64 UBUNTU_VER=20.04 SOC=j721e ./init_setup.sh
 ```
 
 ### Docker-build
 
-First, to use the QEMU (one-time after boot the build machine):
-```
+(Only for CASE 2 - QEMU on x86_64 machine) to set up the QEMU (one-time after boot the build machine):
+```bash
 ./qemu_init.sh
 ```
 
-```
+Depending on the Ubuntu distro for the target docker container, run one of these:
+```bash
 ARCH=arm64 UBUNTU_VER=22.04 SOC=j721e ./docker_build.sh
 ARCH=arm64 UBUNTU_VER=20.04 SOC=j721e ./docker_build.sh
 ```
 
 ### Docker-run
 
-Compiling with the native GCC in arm64v8 Ubuntu Docker container on x86_64 machine with QEMU:
-```
+Depending on the Ubuntu distro for the target docker container, run one of these:
+```bash
 ARCH=arm64 UBUNTU_VER=22.04 SOC=j721e ./docker_run.sh
 ARCH=arm64 UBUNTU_VER=20.04 SOC=j721e ./docker_run.sh
 ```
 
 ### Build in the container
 
-```
+```bash
 GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 ```
 
@@ -143,20 +153,20 @@ From `sdk_builder/scripts/setup_psdk_rtos.sh`, following scripts are extracted. 
 
 ### AR Flags
 With the default Concerto compiler settings, the following warning messages show up around every static .a library.
-```
+```bash
 /usr/bin/ar: `u' modifier ignored since `D' is the default (see `U')
 ```
 
 A workaround: https://github.com/rsyslog/rsyslog/issues/1179
 Update sdk_builder/concerto/compilers/gcc_linux_arm.mak to remove 'u' flag as follows:
-```
+```bash
 $(_MODULE)_LINK_LIB   := $(AR) -rsc $($(_MODULE)_BIN) $($(_MODULE)_OBJS)
 ```
 
 ### Configuration for aarch64 Ubuntu container
 
 - Following env variables are passed during docker-run:
-    ```
+    ```bash
     GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0
     ```
 - During docker-build:

@@ -7,6 +7,7 @@ HOST_ARCH=`arch`
 
 # archtecture for the Docker container
 : "${ARCH:=amd64}"
+: "${UBUNTU_VER:=22.04}"
 
 : "${SOC:=j721e}"
 TISDK_IMAGE=edgeai
@@ -43,7 +44,7 @@ PSDK_LINUX_WEBLINK=http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINU
 # define a function to save selected environment variables
 save_env_vars() {
     output_file="sdk_variables.txt"
-    env_vars=("REPO_TAG" "PSDK_LINUX_VERSION" "SOC"
+    env_vars=("ARCH" "UBUNTU_VER" "REPO_TAG" "PSDK_LINUX_VERSION" "SOC"
         "DEVICE_NAME" "DEVICE_PLATFORM" "PSDK_LINUX_ROOTFS"
         "PSDK_LINUX_BOOTFS" "PSDK_LINUX_WEBLINK")
     for var in "${env_vars[@]}"; do
