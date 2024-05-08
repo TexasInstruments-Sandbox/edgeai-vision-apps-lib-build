@@ -72,7 +72,7 @@ download_targetfs() {
             echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Installing files ..."
             mkdir -p targetfs
             tar xf ${PSDK_LINUX_ROOTFS} -C targetfs/
-            # rm ${PSDK_LINUX_ROOTFS}
+            rm ${PSDK_LINUX_ROOTFS}
         fi
     fi
     echo "[psdk linux ${PSDK_LINUX_ROOTFS}] Done "
@@ -87,7 +87,7 @@ download_rootfs() {
             echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Installing files ..."
             mkdir -p bootfs
             tar xf ${PSDK_LINUX_BOOTFS} -C bootfs/
-            # rm ${PSDK_LINUX_BOOTFS}
+            rm ${PSDK_LINUX_BOOTFS}
         fi
     fi
     echo "[psdk linux ${PSDK_LINUX_BOOTFS}] Done "
@@ -119,6 +119,8 @@ if [ ! -d $WORKAREA ]; then
     done
     # remove the 'u' flag for AR to avoid warning messages in aarch64 Ubuntu container
     copy_and_backup patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
+    # rule for deb packing added (exprimental)
+    copy_and_backup patches/sdk_builder/makerules/makefile_ipk.mak ${WORKAREA}/sdk_builder/makerules/makefile_ipk.mak
 
     # download and install PSDK Linux target FS and boot image
     if [ "$ARCH" == "amd64" ]; then
