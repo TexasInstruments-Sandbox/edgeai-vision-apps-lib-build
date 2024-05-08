@@ -138,7 +138,17 @@ GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=
 ```
 
 `vision_apps.so` location:
-`${SOC}-workarea/vision_apps/out/J721E/A72/LINUX/release/libtivision_apps.so.<ver>`
+`${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libtivision_apps.so.${PSDK_VERSIO}`
+
+### Debian Packaging (Exprimental) in the container
+
+```bash
+PKG_DIST=ubuntu22.04 make deb_package
+PKG_DIST=ubuntu20.04 make deb_package
+```
+
+The resulting Debian package is located:
+`${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libti-vision-apps-${SOC}_${PSDK_VERSIO}-${PKG_DIST}.deb`
 
 ## Workarounds and Fixes
 

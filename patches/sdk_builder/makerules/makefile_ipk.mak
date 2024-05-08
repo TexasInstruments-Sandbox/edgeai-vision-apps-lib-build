@@ -172,8 +172,7 @@ deb_package:
 
 	# Get .so libs for deb package
 	@mkdir -p $(DEB_TMP_PATH)/usr/lib
-	cp -p $(LINUX_FS_PATH)/usr/lib/libtivision_apps.so.$(PSDK_VERSION) $(DEB_TMP_PATH)/usr/lib
-	cp -p $(LINUX_FS_PATH)/usr/lib/libtivision_apps.so $(DEB_TMP_PATH)/usr/lib
+	cp -p $(DEB_OUT_PATH)/libtivision_apps.so.$(PSDK_VERSION) $(DEB_TMP_PATH)/usr/lib
 
 	# Get header files for ipk package
 	@# copy all the .h files under folders in IPK_INCLUDE_FOLDERS
@@ -194,6 +193,15 @@ deb_package:
 	Maintainer: TBD\n\
 	Description: TI vision-apps library $(SOC) $(PSDK_VERSION)-$(PKG_DIST)\n\
 	"  > $(DEB_TMP_PATH)/DEBIAN/control
+
+	# form postinst file
+	@printf "#!/bin/bash\n\
+	set -e\n\
+	# Create symbolic link\n\
+	ln -sf /usr/lib/libtivision_apps.so.$(PSDK_VERSION) /usr/lib/libtivision_apps.so\n\
+	#DEBHELPER#\n\
+	exit 0" > $(DEB_TMP_PATH)/DEBIAN/postinst
+	chmod +x $(DEB_TMP_PATH)/DEBIAN/postinst
 
 	# package into .deb
 	dpkg-deb --build $(DEB_TMP_PATH)
