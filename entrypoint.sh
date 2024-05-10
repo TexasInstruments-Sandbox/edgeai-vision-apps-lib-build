@@ -9,13 +9,13 @@ echo "`arch`"
 
 # Ubuntu version
 UBUNTU_VER=$(lsb_release -r | cut -f2)
-echo "Ubuntu $UBUNTU_VER"
+echo "$BASE_IMAGE"
 
-# copy headers from targetfs
+# workaround: copy headers from targetfs
 # TODO: eleminate this step
 if [ "${ARCH}" == "arm64" ]; then
     cd /opt/psdk-rtos/patches
-    # To address the followings, install libglm-dev, libdrm-dev in the Dockerfile
+    # install libglm-dev, libdrm-dev in the Dockerfile
     # cp -r targetfs/usr/include/KHR/ /usr/include
     # cp -r targetfs/usr/include/glm/ /usr/include
     # cp targetfs/usr/include/xf86drm.h /usr/include

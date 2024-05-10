@@ -2,7 +2,6 @@ ARG ARCH
 ARG BASE_IMAGE
 ARG USE_PROXY
 ARG HTTP_PROXY
-ARG SOC
 ARG DEBIAN_FRONTEND=noninteractive
 ARG UBUNTU_1804
 
@@ -23,8 +22,6 @@ ARG ARCH
 ARG DEBIAN_FRONTEND
 ARG UBUNTU_1804
 ARG FIRMWARE_ONLY
-ARG SOC
-ENV SOC=${SOC}
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
@@ -34,10 +31,10 @@ ADD proxy /root/proxy
 RUN /root/setup_proxy.sh
 
 # install python packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-pip && \
-    python3 -m pip install --upgrade pip && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     python3-pip && \
+#     python3 -m pip install --upgrade pip && \
+#     rm -rf /var/lib/apt/lists/*
 
 # intsall utils and miscellaneous packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -63,16 +60,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # install additional dependencies from the source pack
-# below work well with Docker 24.0, but not work with Docker 20.10
-# WORKDIR /opt/psdk-rtos
-# RUN --mount=type=bind,source=./${SOC}-workarea,target=/opt/psdk-rtos/${SOC}-workarea \
-#     cd ${SOC}-workarea && \
-#     bash ./sdk_builder/scripts/setup_tools_apt.sh
-
-# WORKDIR /opt/psdk-rtos
-# ADD setup_tools_apt.sh /opt/psdk-rtos
-# RUN ./setup_tools_apt.sh
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     build-essential \
@@ -112,10 +99,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Somehow keep retrying to connect pypi.python.org in TI network then time out
-RUN python3 -m pip install \
-    pycryptodomex \
-    meson \
-    jsonschema
+# Not working in Debian container
+# RUN python3 -m pip install \
+#     pycryptodomex \
+#     meson \
+#     jsonschema
 
 # install libGLESv2, libEGL, libgbm-dev, libglm-dev, libdrm-dev
 RUN if [ "${ARCH}" = "arm64" ]; then \
@@ -128,7 +116,6 @@ RUN if [ "${ARCH}" = "arm64" ]; then \
     fi
 
 # build and install ti-rpmsg-char
-# TODO: package .so and headers
 WORKDIR /opt
 RUN if [ "${ARCH}" = "arm64" ]; then \
         git clone git://git.ti.com/rpmsg/ti-rpmsg-char.git && \

@@ -160,7 +160,7 @@ ipk_clean:
 	rm -f $(IPK_OUT_PATH)/tivision-apps_$(VERSION_STRING).ipk
 
 ##### Exprimental
-# PKG_DIST can be 'yocto4.0', 'ubuntu22.04', ...
+# PKG_DIST can be 'yocto4.0', 'ubuntu22.04', 'debian12.5'...
 PKG_DIST ?= yocto4.0
 PKG_NAME=libti-vision-apps-$(SOC)_$(PSDK_VERSION)-$(PKG_DIST)
 DEB_TMP_PATH = $(VISION_APPS_TMP_PATH)/$(PKG_NAME)

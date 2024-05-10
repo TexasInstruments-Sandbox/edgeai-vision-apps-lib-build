@@ -7,7 +7,7 @@ HOST_ARCH=`arch`
 
 # archtecture for the Docker container
 : "${ARCH:=amd64}"
-: "${UBUNTU_VER:=22.04}"
+: "${BASE_IMAGE:=ubuntu:22.04}"
 
 : "${SOC:=j721e}"
 TISDK_IMAGE=edgeai
@@ -44,7 +44,7 @@ PSDK_LINUX_WEBLINK=http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINU
 # define a function to save selected environment variables
 save_env_vars() {
     output_file="sdk_variables.txt"
-    env_vars=("ARCH" "UBUNTU_VER" "REPO_TAG" "PSDK_LINUX_VERSION" "SOC"
+    env_vars=("ARCH" "BASE_IMAGE" "REPO_TAG" "PSDK_LINUX_VERSION" "SOC"
         "DEVICE_NAME" "DEVICE_PLATFORM" "PSDK_LINUX_ROOTFS"
         "PSDK_LINUX_BOOTFS" "PSDK_LINUX_WEBLINK")
     for var in "${env_vars[@]}"; do
@@ -121,6 +121,8 @@ if [ ! -d $WORKAREA ]; then
     copy_and_backup patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
     # rule for deb packing added (exprimental)
     copy_and_backup patches/sdk_builder/makerules/makefile_ipk.mak ${WORKAREA}/sdk_builder/makerules/makefile_ipk.mak
+    # adding /usr/include/libdrm to IDIRS (for Debian container)
+    copy_and_backup patches/vision_apps/utils/opengl/src/a72/concerto.mak ${WORKAREA}/vision_apps/utils/opengl/src/a72/concerto.mak
 
     # download and install PSDK Linux target FS and boot image
     if [ "$ARCH" == "amd64" ]; then

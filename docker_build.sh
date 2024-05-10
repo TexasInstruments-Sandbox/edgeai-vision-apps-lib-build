@@ -1,14 +1,19 @@
 #!/bin/bash
-# ARCH: amd64 (for x86_64) or arm64 (for aarch64)
-: "${ARCH:=amd64}"
-# Ubuntu version: 20.04 or 22.04
-: "${UBUNTU_VER:=22.04}"
+set -e
 
-: "${USE_PROXY:=0}"
-: "${SOC:=j721e}"
+# ARCH: amd64, arm64
+: "${ARCH:=amd64}"
+
+# base image: ubuntu:22.04, ubuntu20.04, debian:12.5, ...
+: "${BASE_IMAGE:=ubuntu:22.04}"
+
+# SDK version
 SDK_VER=9.2.0
 
-BASE_IMAGE=ubuntu:${UBUNTU_VER}
+# docker tag
+DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${BASE_IMAGE//:/}
+echo "DOCKER_TAG = $DOCKER_TAG"
+
 if [ "$ARCH" == "arm64" ]; then
     BASE_IMAGE="arm64v8/${BASE_IMAGE}"
 fi
@@ -20,10 +25,9 @@ if [ "$ARCH" == "18.04" ]; then
 fi
 echo "UBUNTU_1804 = $UBUNTU_1804"
 
-DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${UBUNTU_VER}-${SOC}
-echo "DOCKER_TAG = $DOCKER_TAG"
+# for TI proxy network settings
+: "${USE_PROXY:=0}"
 
-set -e
 # modify the server and proxy URLs as requied
 if [ "${USE_PROXY}" -ne "0" ]; then
     HTTP_PROXY=http://webproxy.ext.ti.com:80
@@ -41,7 +45,6 @@ fi
 if [ -d "$PROXY_DIR" ]; then
     cp -rp $PROXY_DIR/* ${DST_DIR}/proxy
 fi
-# cp -p ${SOC}-workarea/sdk_builder/scripts/setup_tools_apt.sh ${DST_DIR}
 
 # docker-build
 SECONDS=0
@@ -51,7 +54,6 @@ DOCKER_BUILDKIT=1 docker build \
     --build-arg BASE_IMAGE=$BASE_IMAGE \
     --build-arg USE_PROXY=$USE_PROXY \
     --build-arg HTTP_PROXY=$HTTP_PROXY \
-    --build-arg SOC=$SOC \
     --build-arg UBUNTU_1804=$UBUNTU_1804 \
     --progress=plain \
     -f Dockerfile $DST_DIR

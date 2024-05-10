@@ -1,14 +1,16 @@
 #!/bin/bash
-# ARCH: amd64 (for x86_64) or arm64 (for aarch64)
-: "${ARCH:=amd64}"
-# Ubuntu version: 20.04 or 22.04
-: "${UBUNTU_VER:=22.04}"
 
-: "${USE_PROXY:=0}"
-: "${SOC:=j721e}"
+# ARCH: amd64, arm64
+: "${ARCH:=amd64}"
+
+# base image: ubuntu:22.04, ubuntu20.04, debian:12.5, ...
+: "${BASE_IMAGE:=ubuntu:22.04}"
+
+# SDK version
 SDK_VER=9.2.0
 
-DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${UBUNTU_VER}-${SOC}
+# docker tag
+DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${BASE_IMAGE//:/}
 echo "DOCKER_TAG = $DOCKER_TAG"
 
 if [ "$#" -lt 1 ]; then
@@ -25,6 +27,7 @@ docker run -it --rm \
     --network host \
     --env USE_PROXY=$USE_PROXY \
     --env SOC=$SOC \
+    --env BASE_IMAGE=$BASE_IMAGE \
     $DOCKER_TAG $CMD
 fi
 
@@ -37,5 +40,6 @@ docker run -it --rm \
     --env USE_PROXY=$USE_PROXY \
     --env SOC=$SOC \
     --env ARCH=$ARCH \
+    --env BASE_IMAGE=$BASE_IMAGE \
       $DOCKER_TAG $CMD
 fi
