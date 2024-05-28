@@ -24,6 +24,6 @@ if [ "${ARCH}" == "arm64" ]; then
 fi
 
 # working dir
-cd /opt/psdk-rtos/${SOC}-workarea/sdk_builder
+cd /opt/psdk-rtos/workarea/sdk_builder
 
 exec "$@"

@@ -72,26 +72,30 @@ This has the same goal as the PSDK-RTOS workarea build system except doing in Ub
 ### initial setup: install source repos and compiler tools
 
 ```bash
-ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=j721e ./init_setup.sh
+ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=<platform_name> ./init_setup.sh
 ```
+
+where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
 
 ### Docker-build
 
 ```bash
-ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=j721e ./docker_build.sh
+ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_build.sh
 ```
 
 ### Docker-run
 
 ```bash
-ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=j721e ./docker_run.sh
+ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_run.sh
 ```
 
 ### Build the vision-apps library in the container
 
 ```bash
-make yocto_build
+SOC=<platform_name> make yocto_build
 ```
+
+where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
 
 ## CASE 2 & 3: Compiling with the native GCC in arm64v8 Ubuntu Docker container
 
@@ -107,9 +111,9 @@ Target for lib deployment:
 
 Depending on the Ubuntu distro for the target docker container, run one of these:
 ```bash
-ARCH=arm64 BASE_IMAGE=ubuntu:22.04 SOC=j721e ./init_setup.sh
-ARCH=arm64 BASE_IMAGE=ubuntu:20.04 SOC=j721e ./init_setup.sh
-ARCH=arm64 BASE_IMAGE=debian:12.5 SOC=j721e ./init_setup.sh
+ARCH=arm64 BASE_IMAGE=ubuntu:22.04 ./init_setup.sh
+ARCH=arm64 BASE_IMAGE=ubuntu:20.04 ./init_setup.sh
+ARCH=arm64 BASE_IMAGE=debian:12.5 ./init_setup.sh
 ```
 
 ### Docker-build
@@ -121,25 +125,31 @@ ARCH=arm64 BASE_IMAGE=debian:12.5 SOC=j721e ./init_setup.sh
 
 Depending on the Ubuntu distro for the target docker container, run one of these:
 ```bash
-ARCH=arm64 BASE_IMAGE=ubuntu:22.04 SOC=j721e ./docker_build.sh
-ARCH=arm64 BASE_IMAGE=ubuntu:20.04 SOC=j721e ./docker_build.sh
-ARCH=arm64 BASE_IMAGE=debian:12.5 SOC=j721e ./docker_build.sh
+ARCH=arm64 BASE_IMAGE=ubuntu:22.04 ./docker_build.sh
+ARCH=arm64 BASE_IMAGE=ubuntu:20.04 ./docker_build.sh
+ARCH=arm64 BASE_IMAGE=debian:12.5 ./docker_build.sh
 ```
 
 ### Docker-run
 
 Depending on the Ubuntu distro for the target docker container, run one of these:
 ```bash
-ARCH=arm64 BASE_IMAGE=ubuntu:22.04 SOC=j721e ./docker_run.sh
-ARCH=arm64 BASE_IMAGE=ubuntu:20.04 SOC=j721e ./docker_run.sh
-ARCH=arm64 BASE_IMAGE=debian:12.5 SOC=j721e ./docker_run.sh
+ARCH=arm64 BASE_IMAGE=ubuntu:22.04 ./docker_run.sh
+ARCH=arm64 BASE_IMAGE=ubuntu:20.04 ./docker_run.sh
+ARCH=arm64 BASE_IMAGE=debian:12.5 ./docker_run.sh
 ```
 
 ### Build the vision-apps library in the container
 
+If need to clean up any previous build, run `SOC=<platform_name> make yocto_clean` or `SOC=<platform_name> make vision_apps_clean`.
+
+To build the vision-apps library in the container, run the following:
 ```bash
-GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
+SOC=<platform_name> GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 ```
+
+where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
+
 
 `vision_apps.so` location:
 `${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libtivision_apps.so.${PSDK_VERSION}`
@@ -147,13 +157,13 @@ GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=
 ### Debian packaging (Exprimental) in the container
 
 ```bash
-PKG_DIST=ubuntu22.04 make deb_package
-PKG_DIST=ubuntu20.04 make deb_package
-PKG_DIST=debian12.5 make deb_package
+SOC=<platform_name> PKG_DIST=ubuntu22.04 make deb_package
+SOC=<platform_name> PKG_DIST=ubuntu20.04 make deb_package
+SOC=<platform_name> PKG_DIST=debian12.5 make deb_package
 ```
 
 The resulting Debian package is located:
-`${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libti-vision-apps-${SOC}_${PSDK_VERSIO}-${PKG_DIST}.deb`
+`${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libti-vision-apps-${SOC}_${PSDK_VERSION}-${PKG_DIST}.deb`
 
 ## Workarounds and Fixes
 

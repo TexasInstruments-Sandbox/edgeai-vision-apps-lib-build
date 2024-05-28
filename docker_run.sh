@@ -21,24 +21,22 @@ fi
 
 if [ "$ARCH" == "amd64" ]; then
 docker run -it --rm \
-    -v ${PWD}/${SOC}-workarea:/opt/psdk-rtos/${SOC}-workarea \
+    -v ${PWD}/workarea:/opt/psdk-rtos/workarea \
     -v ${PWD}/psdk-tools:/root/ti \
     --privileged \
     --network host \
     --env USE_PROXY=$USE_PROXY \
-    --env SOC=$SOC \
     --env BASE_IMAGE=$BASE_IMAGE \
     $DOCKER_TAG $CMD
 fi
 
 if [ "$ARCH" == "arm64" ]; then
 docker run -it --rm \
-    -v ${PWD}/${SOC}-workarea:/opt/psdk-rtos/${SOC}-workarea \
+    -v ${PWD}/workarea:/opt/psdk-rtos/workarea \
     -v ${PWD}/patches/targetfs:/opt/psdk-rtos/patches/targetfs \
     --privileged \
     --network host \
     --env USE_PROXY=$USE_PROXY \
-    --env SOC=$SOC \
     --env ARCH=$ARCH \
     --env BASE_IMAGE=$BASE_IMAGE \
       $DOCKER_TAG $CMD
