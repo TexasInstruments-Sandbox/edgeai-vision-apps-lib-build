@@ -139,6 +139,9 @@ RUN echo "if [ -n \"$BASH_VERSION\" ]; then"     >  .profile && \
     echo "#!/bin/bash"                           >  .bashrc  && \
     echo "export PS1=\"${debian_chroot:+($debian_chroot)}\u@docker:\w\$ \"" >> .bashrc
 
+# add label
+LABEL TI_IMAGE_SOURCE=${BASE_IMAGE}
+
 WORKDIR /opt/psdk-rtos
 
 # setup entrypoint

@@ -1,4 +1,4 @@
-Vision-Apps Library Build in Ubuntu Docker Container
+Vision-Apps Library Build in Target Docker Container
 ====================================================
 
 Docker-based build system for vision_apps library (extendable to other PSDK-RTOS components). Supported use cases include:
@@ -32,7 +32,7 @@ Docker-based build system for vision_apps library (extendable to other PSDK-RTOS
 
 ### docker-pull the base Docker image
 
-Pull the Docker image needed. Assuming outside of a proxy network,
+Pull the baseline Docker image needed. Assuming outside of a proxy network,
 ```bash
 docker pull ubuntu:22.04
 docker pull ubuntu:20.04
