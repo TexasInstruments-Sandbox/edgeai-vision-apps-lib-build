@@ -19,6 +19,7 @@ ENV https_proxy=${HTTP_PROXY}
 #=========================================================================
 FROM base-${USE_PROXY}
 ARG ARCH
+ARG BASE_IMAGE
 ARG DEBIAN_FRONTEND
 ARG UBUNTU_1804
 ENV LANG=C.UTF-8
