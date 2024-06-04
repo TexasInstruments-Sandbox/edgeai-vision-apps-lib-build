@@ -57,7 +57,7 @@ git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 
-### edgeai-ti-proxy (only required to make the build system work in TI Proxy network)
+### edgeai-ti-proxy (only required to make the build system work in TI proxy network)
 
 Set up `edgeai-ti-proxy` ([repo link](https://bitbucket.itg.ti.com/projects/PROCESSOR-SDK-VISION/repos/edgeai-ti-proxy/browse))
 

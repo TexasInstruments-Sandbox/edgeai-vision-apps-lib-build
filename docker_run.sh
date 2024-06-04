@@ -10,7 +10,7 @@
 SDK_VER=9.2.0
 
 # docker tag
-DOCKER_TAG=lib-builder-${SDK_VER}:${ARCH}-${BASE_IMAGE//:/}
+DOCKER_TAG=vision-apps-builder:${SDK_VER}-${ARCH}-${BASE_IMAGE//:/}
 echo "DOCKER_TAG = $DOCKER_TAG"
 
 if [ "$#" -lt 1 ]; then
