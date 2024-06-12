@@ -123,6 +123,8 @@ if [ ! -d $WORKAREA ]; then
     copy_and_backup patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
     # rule for deb packing added (exprimental)
     copy_and_backup patches/sdk_builder/makerules/makefile_ipk.mak ${WORKAREA}/sdk_builder/makerules/makefile_ipk.mak
+    # yocto_build: exclude vx_app_conformance_video_io (having a link error)
+    copy_and_backup patches/sdk_builder/makerules/makefile_linux_arm.mak ${WORKAREA}/sdk_builder/makerules/makefile_linux_arm.mak
     # adding /usr/include/libdrm to IDIRS (for Debian container)
     copy_and_backup patches/vision_apps/utils/opengl/src/a72/concerto.mak ${WORKAREA}/vision_apps/utils/opengl/src/a72/concerto.mak
 
