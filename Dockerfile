@@ -3,7 +3,6 @@ ARG BASE_IMAGE
 ARG USE_PROXY
 ARG HTTP_PROXY
 ARG DEBIAN_FRONTEND=noninteractive
-ARG UBUNTU_1804
 
 #=========================================================================
 FROM --platform=linux/${ARCH} ${BASE_IMAGE} AS base-0
@@ -21,7 +20,6 @@ FROM base-${USE_PROXY}
 ARG ARCH
 ARG BASE_IMAGE
 ARG DEBIAN_FRONTEND
-ARG UBUNTU_1804
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
@@ -60,19 +58,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # install additional dependencies from the source pack
+# python3-distutils is not included in Ubuntu:24.04, instead install python3-setuptools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     build-essential \
     git \
     curl \
-    python3-distutils \
-    libtinfo5 \
     bison \
     flex \
     swig \
     u-boot-tools && \
-    if [ ${UBUNTU_1804} -eq 0 ]; then \
-        apt-get update && apt-get install -y --no-install-recommends \
+    if echo ${BASE_IMAGE} | grep -q "ubuntu:24.04"; then \
+        apt-get install -y --no-install-recommends python3-setuptools libtinfo6 libncurses6 ; \
+    else \
+        apt-get install -y --no-install-recommends python3-distutils libtinfo5 libncurses5 ; \
+    fi && \
+    if [ ! "${BASE_IMAGE}" = *18.04* ]; then \
+        apt-get install -y --no-install-recommends \
         # libc6-i386 is not available on arm64v8/ubuntu
         # installing libc6-i386-amd64-cross instead
         libc6-i386-amd64-cross; \
@@ -86,9 +88,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkgconf \
     graphviz \
     graphviz-dev \
-    python3-pyelftools \
-    libncurses5 && \
-    if [ ${UBUNTU_1804} -eq 0 ]; then \
+    python3-pyelftools && \
+    if [ ! "${BASE_IMAGE}" = *18.04* ]; then \
         apt-get install -y --no-install-recommends \
         # python3-pip \
         python3-setuptools \
