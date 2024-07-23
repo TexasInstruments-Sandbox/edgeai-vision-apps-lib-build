@@ -15,13 +15,11 @@ WORKAREA=$SCRIPT_DIR/workarea
 
 # pull the source repos
 # https://git.ti.com/cgit/processor-sdk/psdk_repo_manifests/refs/?h=main
-# REPO_TAG=REL.PSDK.ANALYTICS.09.00.01.01
-REPO_TAG=REL.PSDK.ANALYTICS.09.02.00.05
+REPO_TAG=REL.PSDK.ANALYTICS.10.00.00.01
 
 # targetfs and rootfs info
 # http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/
-# PSDK_LINUX_VERSION=09_00_01_03
-PSDK_LINUX_VERSION=09_02_00_05
+PSDK_LINUX_VERSION=10_00_00_03
 
 # define a function to save selected environment variables
 save_env_vars() {
@@ -124,7 +122,7 @@ if [ ! -d $WORKAREA ]; then
     # rule for deb packing added (exprimental)
     copy_and_backup patches/sdk_builder/makerules/makefile_ipk.mak ${WORKAREA}/sdk_builder/makerules/makefile_ipk.mak
     # yocto_build: exclude vx_app_conformance_video_io (having a link error)
-    copy_and_backup patches/sdk_builder/makerules/makefile_linux_arm.mak ${WORKAREA}/sdk_builder/makerules/makefile_linux_arm.mak
+    # copy_and_backup patches/sdk_builder/makerules/makefile_linux_arm.mak ${WORKAREA}/sdk_builder/makerules/makefile_linux_arm.mak
     # adding /usr/include/libdrm to IDIRS (for Debian container)
     copy_and_backup patches/vision_apps/utils/opengl/src/a72/concerto.mak ${WORKAREA}/vision_apps/utils/opengl/src/a72/concerto.mak
 

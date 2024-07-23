@@ -117,8 +117,6 @@ $(_MODULE)_COPT += -mfpu=neon -mfloat-abi=hard
 endif
 endif
 
-$(_MODULE)_COPT += -Wno-stringop-overread
-
 ifeq ($(TARGET_BUILD),debug)
 $(_MODULE)_COPT += -ggdb -ggdb3 -gdwarf-2 -D_DEBUG_=1
 else ifneq ($(filter $(TARGET_BUILD),release production),)
@@ -167,18 +165,6 @@ else ifneq ($(filter $(TARGET_CPU),A53 A53F),)
 $(_MODULE)_COPT += -mcpu=cortex-a53
 endif
 
-# This flag indicates to the compiler that unaligned memory accesses are not
-# handled by the system.  This flag was added in the migration from using GCC 9.2
-# to GCC 11.3, as certain OpenVX Image related tests failed since the code requires
-# this flag to be set in the case, as unaligned accesses are evidently possible
-# without this flag.
-#
-# For more information on this flag, see below:
-# https://gcc.gnu.org/onlinedocs/gcc-11.3.0/gcc/AArch64-Function-Attributes.html
-#
-# Note: this flag has also been added for QNX
-$(_MODULE)_COPT += -mstrict-align
-
 ifeq ($(BUILD_IGNORE_LIB_ORDER),yes)
 LINK_START_GROUP=-Wl,--start-group
 LINK_END_GROUP=-Wl,--end-group
@@ -210,6 +196,7 @@ $(_MODULE)_CPLDFLAGS := $(foreach ldf,$($(_MODULE)_LDFLAGS),-Wl,$(ldf)) $($(_MOD
 $(_MODULE)_CFLAGS   := -c $($(_MODULE)_INCLUDES) $($(_MODULE)_DEFINES) $($(_MODULE)_COPT) $(CFLAGS)
 $(_MODULE)_CPPFLAGS := $(CPPFLAGS)
 
+#==> change for vision-apps-build
 ARCH_LOCAL := $(shell uname -m)
 ifeq ($(ARCH_LOCAL),aarch64)
 $(_MODULE)_LDFLAGS  += -L/usr/lib/aarch64-linux-gnu/
@@ -247,7 +234,7 @@ endif
 
 $(_MODULE)_LN_DSO     := $(LINK) $(notdir $($(_MODULE)_BIN).$($(_MODULE)_VERSION)) $($(_MODULE)_BIN)
 $(_MODULE)_LN_INST_DSO:= $(LINK) $($(_MODULE)_INSTALL_LIB)/$($(_MODULE)_OUT).$($(_MODULE)_VERSION) $($(_MODULE)_INSTALL_LIB)/$($(_MODULE)_OUT)
-# remove the 'u' flag for AR to avoid warning messages in aarch64 Ubuntu container
+#==> remove the 'u' flag for AR to avoid warning messages in aarch64 Ubuntu container
 $(_MODULE)_LINK_LIB   := $(AR) -rsc $($(_MODULE)_BIN) $($(_MODULE)_OBJS)
 
 ifeq ($(HOST_OS),DARWIN)
