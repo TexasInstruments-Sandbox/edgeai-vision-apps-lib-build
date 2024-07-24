@@ -75,7 +75,7 @@ This has the same goal as the PSDK-RTOS workarea build system except doing in Ub
 ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=<platform_name> ./init_setup.sh
 ```
 
-where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
+where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
 
 ### Docker-build
 
@@ -95,7 +95,7 @@ ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_run.sh
 SOC=<platform_name> make yocto_build
 ```
 
-where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
+where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
 
 ## CASE 2 & 3: Compiling with the native GCC in arm64v8 Ubuntu Docker container
 
@@ -148,7 +148,7 @@ To build the vision-apps library in the container, run the following:
 SOC=<platform_name> GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 ```
 
-where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
+where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
 
 
 `vision_apps.so` location:

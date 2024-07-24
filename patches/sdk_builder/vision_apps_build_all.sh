@@ -5,12 +5,14 @@ platforms=(
 	j784s4
 	j721s2
 	j721e
-	j722s2
+	j722s
 	am62a
 )
 
 # iterate over the platforms
 for platform in ${platforms[@]}; do
+
+    echo "Building for $platform ..."
 
 	# clean up (to clean up any residual)
 	SOC=$platform make yocto_clean
