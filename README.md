@@ -152,7 +152,7 @@ where `platform_name=[j721e|j721s2|j722s2|j784s4|am62a]`.
 
 
 `vision_apps.so` location:
-`${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libtivision_apps.so.${PSDK_VERSION}`
+`workarea/vision_apps/out/${SOC}/A72/LINUX/release/libtivision_apps.so.${PSDK_VERSION}`
 
 ### Debian packaging (Exprimental) in the container
 
@@ -163,7 +163,7 @@ SOC=<platform_name> PKG_DIST=debian12.5 make deb_package
 ```
 
 The resulting Debian package is located:
-`${SOC}-workarea/vision_apps/out/${SOC}/A72/LINUX/release/libti-vision-apps-${SOC}_${PSDK_VERSION}-${PKG_DIST}.deb`
+`workarea/vision_apps/out/${SOC}/A72/LINUX/release/libti-vision-apps-${SOC}_${PSDK_VERSION}-${PKG_DIST}.deb`
 
 ## Workarounds and Fixes
 
