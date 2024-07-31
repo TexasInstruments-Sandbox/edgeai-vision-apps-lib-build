@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+current_dir=$(pwd)
 
 distro="ubuntu22.04"
 platforms=(
@@ -8,6 +10,8 @@ platforms=(
     j722s
     am62a
 )
+
+cd $WORK_DIR/workarea/sdk_builder
 
 # iterate over the platforms
 for platform in ${platforms[@]}; do
@@ -27,3 +31,5 @@ for platform in ${platforms[@]}; do
     SOC=$platform make yocto_clean
 
 done
+
+cd $current_dir

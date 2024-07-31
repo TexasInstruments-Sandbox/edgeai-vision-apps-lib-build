@@ -145,7 +145,8 @@ RUN echo "if [ -n \"$BASH_VERSION\" ]; then"     >  .profile && \
 # add label
 LABEL TI_IMAGE_SOURCE=${BASE_IMAGE}
 
-WORKDIR /opt/psdk-rtos
+ENV WORK_DIR=/opt/psdk-rtos
+WORKDIR $WORK_DIR
 
 # setup entrypoint
 ENTRYPOINT ["/root/entrypoint.sh"]
