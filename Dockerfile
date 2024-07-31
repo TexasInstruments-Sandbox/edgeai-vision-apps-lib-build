@@ -113,7 +113,8 @@ RUN if [ "${ARCH}" = "arm64" ]; then \
         libegl-dev \
         libgbm-dev \
         libglm-dev \
-        libdrm-dev; \
+        libdrm-dev && \
+        rm -rf /var/lib/apt/lists/*; \
     fi
 
 # build and install ti-rpmsg-char
