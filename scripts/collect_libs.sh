@@ -29,7 +29,8 @@ for lib_file in "${lib_files[@]}"; do
     if [ -f "$lib_file" ]; then
         cp "$lib_file" "$TARGET_DIR"
     else
-        echo "File $lib_file does not exist."
+        echo "Error: File $lib_file does not exist."
+        exit 1
     fi
 done
 
