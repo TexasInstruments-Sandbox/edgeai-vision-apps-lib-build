@@ -14,15 +14,13 @@ TARGET_DIR=$HOME/ubuntu22-deps
 # rm -rf $TARGET_DIR
 mkdir -p $TARGET_DIR
 
-ROOT_DIR=""
-
 lib_files=(
     # Vision-apps libs for all the platforms
-    $ROOT_DIR/root/vision-apps-build/workarea/vision_apps/out/J784S4/A72/LINUX/release/libti-vision-apps-j784s4_10.0.0-ubuntu22.04.deb
-    $ROOT_DIR/root/vision-apps-build/workarea/vision_apps/out/J721S2/A72/LINUX/release/libti-vision-apps-j721s2_10.0.0-ubuntu22.04.deb
-    $ROOT_DIR/root/vision-apps-build/workarea/vision_apps/out/J721E/A72/LINUX/release/libti-vision-apps-j721e_10.0.0-ubuntu22.04.deb
-    $ROOT_DIR/root/vision-apps-build/workarea/vision_apps/out/J722S/A53/LINUX/release/libti-vision-apps-j722s_10.0.0-ubuntu22.04.deb
-    $ROOT_DIR/root/vision-apps-build/workarea/vision_apps/out/AM62A/A53/LINUX/release/libti-vision-apps-am62a_10.0.0-ubuntu22.04.deb
+    $HOME/vision-apps-build/workarea/vision_apps/out/J784S4/A72/LINUX/release/libti-vision-apps-j784s4_10.0.0-ubuntu22.04.deb
+    $HOME/vision-apps-build/workarea/vision_apps/out/J721S2/A72/LINUX/release/libti-vision-apps-j721s2_10.0.0-ubuntu22.04.deb
+    $HOME/vision-apps-build/workarea/vision_apps/out/J721E/A72/LINUX/release/libti-vision-apps-j721e_10.0.0-ubuntu22.04.deb
+    $HOME/vision-apps-build/workarea/vision_apps/out/J722S/A53/LINUX/release/libti-vision-apps-j722s_10.0.0-ubuntu22.04.deb
+    $HOME/vision-apps-build/workarea/vision_apps/out/AM62A/A53/LINUX/release/libti-vision-apps-am62a_10.0.0-ubuntu22.04.deb
 )
 
 for lib_file in "${lib_files[@]}"; do
