@@ -6,7 +6,8 @@ SCRIPT_DIR=$PWD
 HOST_ARCH=`arch`
 
 # archtecture for the Docker container
-: "${ARCH:=amd64}"
+# ARCH: arm64 or amd64
+: "${ARCH:=arm64}"
 : "${BASE_IMAGE:=ubuntu:22.04}"
 
 : "${SOC:=j721e}"
@@ -115,7 +116,9 @@ if [ ! -d $WORKAREA ]; then
         # setup_tools_misc.sh
     )
     for File in ${Files[@]}; do
-        copy_and_backup patches/sdk_builder/scripts/${File} ${WORKAREA}/sdk_builder/scripts/${File}
+        if [ "$ARCH" == "amd64" ]; then
+            copy_and_backup patches/sdk_builder/scripts/${File} ${WORKAREA}/sdk_builder/scripts/${File}
+        fi
     done
     # remove the 'u' flag for AR to avoid warning messages in aarch64 Ubuntu container
     copy_and_backup patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
