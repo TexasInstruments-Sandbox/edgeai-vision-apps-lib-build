@@ -27,7 +27,7 @@ then
     TVM_VERSION=9.0.0
     GCC_ARCH64_LINUX_VERSION=13.2.Rel1
 
-    #==> Update by checking <SDK_BUILD_WORKAREA>/pdk/packages/ti/build/pdk_tools_path.mk
+    #==> Update by checking: https://git.ti.com/cgit/processor-sdk/pdk/tree/packages/ti/build/pdk_tools_path.mk
     GCC_ARCH64_VERSION=9.2-2019.12
 
     # Create ${PSDK_TOOLS_PATH} folder if not present
