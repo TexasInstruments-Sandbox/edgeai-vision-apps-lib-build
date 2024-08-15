@@ -16,11 +16,11 @@ WORKAREA=$SCRIPT_DIR/workarea
 
 # pull the source repos
 # https://git.ti.com/cgit/processor-sdk/psdk_repo_manifests/refs/?h=main
-: "${REPO_TAG:=REL.PSDK.ANALYTICS.10.00.00.03}"
+: "${REPO_TAG:=REL.PSDK.ANALYTICS.10.00.00.04}"
 
 # targetfs and rootfs info
 # http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/
-: "${PSDK_LINUX_VERSION:=10_00_00_06}"
+: "${PSDK_LINUX_VERSION:=10_00_00_07}"
 
 # define a function to save selected environment variables
 save_env_vars() {
