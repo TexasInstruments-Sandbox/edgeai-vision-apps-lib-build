@@ -3,7 +3,7 @@ set -e
 SCRIPT_DIR=$PWD
 
 # archtecture of the host machine
-HOST_ARCH=`arch`
+HOST_ARCH=$(arch)
 
 # archtecture for the Docker container
 # ARCH: arm64 or amd64
@@ -20,7 +20,7 @@ WORKAREA=$SCRIPT_DIR/workarea
 
 # targetfs and rootfs info
 # http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/
-: "${PSDK_LINUX_VERSION:=10_00_00_07}"
+: "${PSDK_LINUX_VERSION:=10_00_00_08}"
 
 # define a function to save selected environment variables
 save_env_vars() {

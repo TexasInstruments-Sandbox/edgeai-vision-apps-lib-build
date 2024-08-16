@@ -5,10 +5,11 @@ set -e
 source /root/setup_proxy.sh
 
 # arch
-echo "`arch`"
+echo "$(arch)"
 
 # Ubuntu version
 UBUNTU_VER=$(lsb_release -r | cut -f2)
+echo "UBUNTU_VER=${UBUNTU_VER}"
 echo "$BASE_IMAGE"
 
 # workaround: copy headers from targetfs
