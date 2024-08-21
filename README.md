@@ -2,28 +2,21 @@ Vision-Apps Library Build in Target Docker Container
 ====================================================
 
 Docker-based build system for vision_apps library (extendable to other PSDK-RTOS components). Supported use cases include:
-- **Case 1**: Cross-compiling on x86_64 build machine in Ubuntu Docker container
+- **Case 1**: Compiling with the native GCC in arm64v8 Ubuntu Docker container directly on aarch64 build machine
 - **Case 2**: Compiling with the native GCC in arm64v8 Ubuntu Docker container on x86_64 machine using QEMU
-- **Case 3**: Compiling with the native GCC in arm64v8 Ubuntu Docker container directly on aarch64 build machine
-
-<!-- <p float="left">
-  <img src="docs/diagram_x86_64_container.png" width="383" />
-  <figcaption>CASE 1 in x86_64 Container</figcaption>
-  <img src="docs/diagram_aarch64_container.png" width="383" />
-  <figcaption>CASE 2 and CASE 3 in aarch64 Container</figcaption>
-</p> -->
+- **Case 3**: Cross-compiling on x86_64 build machine in Ubuntu Docker container
 
 <table>
   <tr>
     <td>
-      <img src="docs/diagram_x86_64_container.png" alt="Image 1" style="width: 383px;"/>
-      <br>
-      <center><em>CASE 1 with x86_64 Container</em></center>
-    </td>
-    <td>
       <img src="docs/diagram_aarch64_container.png" alt="Image 2" style="width: 383px;"/>
       <br>
-      <center><em>CASE 2 and CASE 3 with aarch64 Container</em></center>
+      <center><em>CASE 1 and CASE 2 with aarch64 Container</em></center>
+    </td>
+    <td>
+      <img src="docs/diagram_x86_64_container.png" alt="Image 1" style="width: 383px;"/>
+      <br>
+      <center><em>CASE 3 with x86_64 Container</em></center>
     </td>
   </tr>
 </table>
@@ -63,41 +56,7 @@ Set up `edgeai-ti-proxy` ([repo link](https://bitbucket.itg.ti.com/projects/PROC
 
 Before docker-build or docker-run, please make sure sourcing `edgeai-ti-proxy/setup_proxy.sh`, which will define the `USE_PROXY` env variable and all the proxy settings for the TI network.
 
-## CASE 1: Cross-compiling on x86_64 build machine in Ubuntu Docker container
-
-Target for lib deployment: Yocto PSDK-Linux
-
-This has the same goal as the PSDK-RTOS workarea build system except doing in Ubuntu Docker container.
-
-### initial setup: install source repos and compiler tools
-
-```bash
-ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=<platform_name> ./init_setup.sh
-```
-
-where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
-
-### Docker-build
-
-```bash
-ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_build.sh
-```
-
-### Docker-run
-
-```bash
-ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_run.sh
-```
-
-### Build the vision-apps library in the container
-
-```bash
-SOC=<platform_name> make yocto_build
-```
-
-where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
-
-## CASE 2 & 3: Compiling with the native GCC in arm64v8 Ubuntu Docker container
+## CASE 1 & 2: Compiling with the native GCC in arm64v8 Ubuntu Docker container
 
 Build systems:
 1. In arm64v8 Ubuntu Docker container using QEMU on x86_64 machine
@@ -164,6 +123,40 @@ SOC=<platform_name> PKG_DIST=debian12.5 make deb_package
 
 The resulting Debian package is located:
 `workarea/vision_apps/out/${SOC}/A72/LINUX/release/libti-vision-apps-${SOC}_${PSDK_VERSION}-${PKG_DIST}.deb`
+
+## CASE 3: Cross-compiling on x86_64 build machine in Ubuntu Docker container
+
+Target for lib deployment: Yocto PSDK-Linux
+
+This has the same goal as the PSDK-RTOS workarea build system except doing in Ubuntu Docker container.
+
+### initial setup: install source repos and compiler tools
+
+```bash
+ARCH=amd64 BASE_IMAGE=ubuntu:22.04 SOC=<platform_name> ./init_setup.sh
+```
+
+where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
+
+### Docker-build
+
+```bash
+ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_build.sh
+```
+
+### Docker-run
+
+```bash
+ARCH=amd64 BASE_IMAGE=ubuntu:22.04 ./docker_run.sh
+```
+
+### Build the vision-apps library in the container
+
+```bash
+SOC=<platform_name> make yocto_build
+```
+
+where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
 
 ## Workarounds and Fixes
 
