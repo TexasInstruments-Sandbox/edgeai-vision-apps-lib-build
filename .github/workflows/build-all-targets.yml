@@ -1,0 +1,54 @@
+name: build-all-targets
+
+on:
+  workflow_dispatch:
+
+jobs:
+  docker_build:
+    uses: ./.github/workflows/docker-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: "10.0.0"
+
+  # build_am69a:
+  #   needs: docker_build
+  #   uses: ./.github/workflows/lib-build.yml
+  #   secrets:
+  #     env_PAT: ${{ secrets.GHCR_PAT }}
+  #   with:
+  #     soc: j784s4
+
+  # build_am68a:
+  #   needs: docker_build
+  #   uses: ./.github/workflows/lib-build.yml
+  #   secrets:
+  #     env_PAT: ${{ secrets.GHCR_PAT }}
+  #   with:
+  #     soc: j721s2
+
+  # build_tda4vm:
+  #   needs: docker_build
+  #   uses: ./.github/workflows/lib-build.yml
+  #   secrets:
+  #     env_PAT: ${{ secrets.GHCR_PAT }}
+  #   with:
+  #     soc: j721e
+
+  # build_am67a:
+  #   needs: docker_build
+  #   uses: ./.github/workflows/lib-build.yml
+  #   secrets:
+  #     env_PAT: ${{ secrets.GHCR_PAT }}
+  #   with:
+  #     soc: j722s
+
+  # build_am62a:
+  #   needs: docker_build
+  #   uses: ./.github/workflows/lib-build.yml
+  #   secrets:
+  #     env_PAT: ${{ secrets.GHCR_PAT }}
+  #   with:
+  #     soc: am62a
