@@ -18,7 +18,6 @@ on:
 
 env:
   GH_TOKEN: ${{ secrets.env_PAT }}
-  docker_tag: vision-apps-builder:${{ inputs.sdk_ver }}-${{ inputs.arch }}-${{ inputs.base_image.replace(':', '') }}
 
 jobs:
   build:
@@ -43,14 +42,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.env_PAT }}
 
-      - name: Build Docker image
+      - name: Set environment variables
         run: |
-          # ARCH=arm64 BASE_IMAGE=ubuntu:22.04 ./docker_build.sh
+          base_image=${{ inputs.base_image }}
+          echo "docker_tag=vision-apps-builder:${{ inputs.sdk_ver }}-${{ inputs.arch }}-${base_image//:/}" >> $GITHUB_ENV
+          remote_docker_tag=ghcr.io/${{ github.repository_owner }}/$docker_tag
+          echo "remote_docker_tag=${remote_docker_tag,,}" >> $GITHUB_ENV
+
+      - name: Check if Docker image exists
+        id: check_image
+        run: |
+          if docker pull $remote_docker_tag; then
+            echo "Image exists"
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "Image does not exist"
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+
+      - name: Build and push Docker image
+        if: env.exists == 'false'
+        run: |
           ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} ./docker_build.sh
           docker images
-
-      - name: Add a Docker label
-        run: |
+          # add a Docker label
           echo "docker_tag = $docker_tag"
           if [ "$(docker images -q $docker_tag 2> /dev/null)" == "" ]; then
             echo "Docker image $docker_tag does not exist."
@@ -59,10 +74,6 @@ jobs:
             echo "FROM --platform=linux/${{ inputs.arch }} $docker_tag" | docker build --label org.opencontainers.image.source=https://github.com/${{ github.repository }} -t $docker_tag -
             docker inspect --format='{{json .Config.Labels}}' $docker_tag
           fi
-
-      - name: Push Docker image
-        run: |
-          remote_docker_tag=ghcr.io/${{ github.repository_owner }}/$docker_tag
-          remote_docker_tag=${remote_docker_tag,,}
+          # push Docker image
           docker tag $docker_tag $remote_docker_tag
           docker push $remote_docker_tag
