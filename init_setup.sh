@@ -141,8 +141,8 @@ else
     echo "$WORKAREA already exists."
 fi
 
-if [ "$HOST_ARCH" == "x86_64" ]; then
-    # Install the ARM compile tools
+# Install the ARM compile tools
+if [ "$HOST_ARCH" == "x86_64" ] && [ "$ARCH" == "amd64" ]; then
     PSDK_TOOLS_PATH=${SCRIPT_DIR}/psdk-tools
     if [ ! -d $PSDK_TOOLS_PATH ]; then
         mkdir -p $PSDK_TOOLS_PATH
