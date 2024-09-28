@@ -4,21 +4,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  # docker_build:
-  #   uses: ./.github/workflows/docker-build.yml
-  #   secrets:
-  #     env_PAT: ${{ secrets.GHCR_PAT }}
-  #   with:
-  #     arch: arm64
-  #     base_image: "ubuntu:22.04"
-  #     sdk_ver: 10.0.0
+  docker_build:
+    uses: ./.github/workflows/docker-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: 10.0.0
 
   build_am69a:
-    # needs: docker_build
+    needs: docker_build
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
-      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"
@@ -27,11 +26,10 @@ jobs:
       cpu: A72
 
   build_am68a:
-    # needs: docker_build
+    needs: docker_build
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
-      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"
@@ -40,11 +38,10 @@ jobs:
       cpu: A72
 
   build_tda4vm:
-    # needs: docker_build
+    needs: docker_build
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
-      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"
@@ -53,11 +50,10 @@ jobs:
       cpu: A72
 
   build_am67a:
-    # needs: docker_build
+    needs: docker_build
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
-      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"
@@ -66,11 +62,10 @@ jobs:
       cpu: A53
 
   build_am62a:
-    # needs: docker_build
+    needs: docker_build
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
-      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"
@@ -80,9 +75,9 @@ jobs:
 
   release:
     uses: ./.github/workflows/release.yml
-    needs: build_am69a, build_am68a, build_tda4vm, build_am67a, build_am62a
+    needs: [build_am69a, build_am68a, build_tda4vm, build_am67a, build_am62a]
     secrets:
-      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      gh_TOKEN: ${{ secrets.GHCR_PAT }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"

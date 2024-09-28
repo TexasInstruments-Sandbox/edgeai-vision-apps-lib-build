@@ -1,0 +1,124 @@
+name: release reusable
+
+on:
+  workflow_call:
+    inputs:
+      arch:
+        required: true
+        type: string
+      base_image:
+        required: true
+        type: string
+      sdk_ver:
+        required: true
+        type: string
+    secrets:
+      gh_TOKEN:
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ensure all tags are fetched
+
+      - name: Set environment variables
+        id: set_env
+        run: |
+          release_tag=$(git describe --tags --abbrev=0)
+          # release_tag+="_${{ inputs.base_image }}"
+          echo "release_tag=${release_tag}" >> $GITHUB_ENV
+          sdk_ver=${{ inputs.sdk_ver }}
+          base_image=${{ inputs.base_image }}
+          base_image=${base_image//:/}
+          platforms=(
+              j784s4
+              j721s2
+              j721e
+              j722s
+              am62a
+          )
+          for platform in ${platforms[@]}; do
+            pkg_name=libti-vision-apps-${platform}_${sdk_ver}-${base_image}.deb
+            echo "pkg_${platform}=${pkg_name}" >> $GITHUB_ENV
+          done
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+
+      - name: Check for downloaded artifacts
+        run: ls -R release
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          tag_name: ${{ env.release_tag }}
+          release_name: ${{ env.release_tag }}
+          body: |
+            Compatible with PSDK-Linux-EdgeAI ${{ env.release_tag }}. Check the matching version of the PSDK-Linux:
+            - AM69A (j784s4): https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-AM69A
+            - AM68A (j721s2): https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-AM68A
+            - TDA4VM (j721e): https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-SK-TDA4VM
+            - AM67A (j722s): https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-AM67A
+            - AM62A (am62a): https://www.ti.com/tool/download/PROCESSOR-SDK-LINUX-AM62A
+          draft: false
+          prerelease: false
+
+      - name: Upload libti-vision-apps-j784s4 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j784s4 }}/${{ env.pkg_j784s4 }}
+          asset_name: ${{ env.pkg_j784s4 }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-j721s2 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j721s2 }}/${{ env.pkg_j721s2 }}
+          asset_name: ${{ env.pkg_j721s2 }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-j721e to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j721e }}/${{ env.pkg_j721e }}
+          asset_name: ${{ env.pkg_j721e }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-j722s to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j722s }}/${{ env.pkg_j722s }}
+          asset_name: ${{ env.pkg_j722s }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-am62a to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_am62a }}/${{ env.pkg_am62a }}
+          asset_name: ${{ env.pkg_am62a }}
+          asset_content_type: application/vnd.debian.binary
