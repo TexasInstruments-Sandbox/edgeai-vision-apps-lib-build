@@ -6,9 +6,6 @@ on:
       arch:
         required: true
         type: string
-      base_image:
-        required: true
-        type: string
       sdk_ver:
         required: true
         type: string
@@ -26,15 +23,18 @@ jobs:
         with:
           fetch-depth: 0  # ensure all tags are fetched
 
-      - name: Set environment variables
+      - name: Set environment variables - package names
         id: set_env
         run: |
           release_tag=$(git describe --tags --abbrev=0)
-          # release_tag+="_${{ inputs.base_image }}"
           echo "release_tag=${release_tag}" >> $GITHUB_ENV
           sdk_ver=${{ inputs.sdk_ver }}
-          base_image=${{ inputs.base_image }}
-          base_image=${base_image//:/}
+          # base_images
+          base_images=(
+            ubuntu:22.04
+            debian:12.5
+          )
+          # platforms
           platforms=(
               j784s4
               j721s2
@@ -42,9 +42,12 @@ jobs:
               j722s
               am62a
           )
-          for platform in ${platforms[@]}; do
-            pkg_name=libti-vision-apps-${platform}_${sdk_ver}-${base_image}.deb
-            echo "pkg_${platform}=${pkg_name}" >> $GITHUB_ENV
+          for base_image_ in ${base_images[@]}; do
+            base_image=${base_image_//:/}
+            for platform in ${platforms[@]}; do
+              pkg_name=libti-vision-apps-${platform}_${sdk_ver}-${base_image}.deb
+              echo "pkg_${platform}_${base_image}=${pkg_name}" >> $GITHUB_ENV
+            done
           done
 
       - name: Download all artifacts
@@ -73,52 +76,104 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload libti-vision-apps-j784s4 to release
+      ## Upload release: Ubuntu 22.04
+      - name: Upload libti-vision-apps-j784s4-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release/${{ env.pkg_j784s4 }}/${{ env.pkg_j784s4 }}
-          asset_name: ${{ env.pkg_j784s4 }}
+          asset_path: release/${{ env.pkg_j784s4_ubuntu22-04 }}/${{ env.pkg_j784s4_ubuntu22-04 }}
+          asset_name: ${{ env.pkg_j784s4_ubuntu22-04 }}
           asset_content_type: application/vnd.debian.binary
 
-      - name: Upload libti-vision-apps-j721s2 to release
+      - name: Upload libti-vision-apps-j721s2-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release/${{ env.pkg_j721s2 }}/${{ env.pkg_j721s2 }}
-          asset_name: ${{ env.pkg_j721s2 }}
+          asset_path: release/${{ env.pkg_j721s2_ubuntu22-04 }}/${{ env.pkg_j721s2_ubuntu22-04 }}
+          asset_name: ${{ env.pkg_j721s2_ubuntu22-04 }}
           asset_content_type: application/vnd.debian.binary
 
-      - name: Upload libti-vision-apps-j721e to release
+      - name: Upload libti-vision-apps-j721e-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release/${{ env.pkg_j721e }}/${{ env.pkg_j721e }}
-          asset_name: ${{ env.pkg_j721e }}
+          asset_path: release/${{ env.pkg_j721e_ubuntu22-04 }}/${{ env.pkg_j721e_ubuntu22-04 }}
+          asset_name: ${{ env.pkg_j721e_ubuntu22-04 }}
           asset_content_type: application/vnd.debian.binary
 
-      - name: Upload libti-vision-apps-j722s to release
+      - name: Upload libti-vision-apps-j722s-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release/${{ env.pkg_j722s }}/${{ env.pkg_j722s }}
-          asset_name: ${{ env.pkg_j722s }}
+          asset_path: release/${{ env.pkg_j722s_ubuntu22-04 }}/${{ env.pkg_j722s_ubuntu22-04 }}
+          asset_name: ${{ env.pkg_j722s_ubuntu22-04 }}
           asset_content_type: application/vnd.debian.binary
 
-      - name: Upload libti-vision-apps-am62a to release
+      - name: Upload libti-vision-apps-am62a-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release/${{ env.pkg_am62a }}/${{ env.pkg_am62a }}
-          asset_name: ${{ env.pkg_am62a }}
+          asset_path: release/${{ env.pkg_am62a_ubuntu22-04 }}/${{ env.pkg_am62a_ubuntu22-04 }}
+          asset_name: ${{ env.pkg_am62a_ubuntu22-04 }}
+          asset_content_type: application/vnd.debian.binary
+
+      ## Upload release: Debian 12.5
+      - name: Upload libti-vision-apps-j784s4-debian12-5 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j784s4_debian12-5 }}/${{ env.pkg_j784s4_debian12-5 }}
+          asset_name: ${{ env.pkg_j784s4_debian12-5 }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-j721s2-debian12-5 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j721s2_debian12-5 }}/${{ env.pkg_j721s2_debian12-5 }}
+          asset_name: ${{ env.pkg_j721s2_debian12-5 }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-j721e-debian12-5 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j721e_debian12-5 }}/${{ env.pkg_j721e_debian12-5 }}
+          asset_name: ${{ env.pkg_j721e_debian12-5 }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-j722s-debian12-5 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_j722s_debian12-5 }}/${{ env.pkg_j722s_debian12-5 }}
+          asset_name: ${{ env.pkg_j722s_debian12-5 }}
+          asset_content_type: application/vnd.debian.binary
+
+      - name: Upload libti-vision-apps-am62a-debian12-5 to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/${{ env.pkg_am62a_debian12-5 }}/${{ env.pkg_am62a_debian12-5 }}
+          asset_name: ${{ env.pkg_am62a_debian12-5 }}
           asset_content_type: application/vnd.debian.binary

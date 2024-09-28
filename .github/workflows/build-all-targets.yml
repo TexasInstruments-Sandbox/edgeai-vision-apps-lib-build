@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker_build:
+  ## Docker build
+  docker_build_ubuntu22-04:
     uses: ./.github/workflows/docker-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
@@ -13,8 +14,18 @@ jobs:
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
 
-  build_am69a:
-    needs: docker_build
+  docker_build_debian12-5:
+    uses: ./.github/workflows/docker-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "debian:12.5"
+      sdk_ver: 10.0.0
+
+  ## Library build: Ubuntu 22.04
+  build_am69a_ubuntu22-04:
+    needs: docker_build_ubuntu22-04
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
@@ -25,8 +36,8 @@ jobs:
       soc: j784s4
       cpu: A72
 
-  build_am68a:
-    needs: docker_build
+  build_am68a_ubuntu22-04:
+    needs: docker_build_ubuntu22-04
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
@@ -37,8 +48,8 @@ jobs:
       soc: j721s2
       cpu: A72
 
-  build_tda4vm:
-    needs: docker_build
+  build_tda4vm_ubuntu22-04:
+    needs: docker_build_ubuntu22-04
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
@@ -49,8 +60,8 @@ jobs:
       soc: j721e
       cpu: A72
 
-  build_am67a:
-    needs: docker_build
+  build_am67a_ubuntu22-04:
+    needs: docker_build_ubuntu22-04
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
@@ -61,8 +72,8 @@ jobs:
       soc: j722s
       cpu: A53
 
-  build_am62a:
-    needs: docker_build
+  build_am62a_ubuntu22-04:
+    needs: docker_build_ubuntu22-04
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
@@ -73,13 +84,84 @@ jobs:
       soc: am62a
       cpu: A53
 
+  ## Library build: Debian 12.54
+  build_am69a_debian12-5:
+    needs: docker_build_debian12-5
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "debian:12.5"
+      sdk_ver: 10.0.0
+      soc: j784s4
+      cpu: A72
+
+  build_am68a_debian12-5:
+    needs: docker_build_debian12-5
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "debian:12.5"
+      sdk_ver: 10.0.0
+      soc: j721s2
+      cpu: A72
+
+  build_tda4vm_debian12-5:
+    needs: docker_build_debian12-5
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "debian:12.5"
+      sdk_ver: 10.0.0
+      soc: j721e
+      cpu: A72
+
+  build_am67a_debian12-5:
+    needs: docker_build_debian12-5
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "debian:12.5"
+      sdk_ver: 10.0.0
+      soc: j722s
+      cpu: A53
+
+  build_am62a_debian12-5:
+    needs: docker_build_debian12-5
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+    with:
+      arch: arm64
+      base_image: "debian:12.5"
+      sdk_ver: 10.0.0
+      soc: am62a
+      cpu: A53
+
+  ## Release
   release:
     uses: ./.github/workflows/release.yml
-    needs: [build_am69a, build_am68a, build_tda4vm, build_am67a, build_am62a]
+    needs:
+      - build_am69a_ubuntu22-04
+      - build_am68a_ubuntu22-04
+      - build_tda4vm_ubuntu22-04
+      - build_am67a_ubuntu22-04
+      - build_am62a_ubuntu22-04
+      - build_am69a_debian12-5
+      - build_am68a_debian12-5
+      - build_tda4vm_debian12-5
+      - build_am67a_debian12-5
+      - build_am62a_debian12-5
     secrets:
       gh_TOKEN: ${{ secrets.GHCR_PAT }}
     with:
       arch: arm64
-      base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
 

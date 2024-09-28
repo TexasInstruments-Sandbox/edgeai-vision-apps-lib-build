@@ -91,34 +91,6 @@ jobs:
           # Build the vision-apps lib
           ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} SOC=${{ inputs.soc }} ./docker_run.sh ./vision_apps_build.sh
 
-      # - name: Create dummy package directory structure
-      #   run: |
-      #     mkdir -p dummy_package/DEBIAN
-      #     mkdir -p dummy_package/usr/local/bin
-
-      # - name: Create control file
-      #   run: |
-      #     echo "Package: dummy-package" > dummy_package/DEBIAN/control
-      #     echo "Version: 1.0" >> dummy_package/DEBIAN/control
-      #     echo "Section: base" >> dummy_package/DEBIAN/control
-      #     echo "Priority: optional" >> dummy_package/DEBIAN/control
-      #     echo "Architecture: all" >> dummy_package/DEBIAN/control
-      #     echo "Maintainer: Your Name <youremail@example.com>" >> dummy_package/DEBIAN/control
-      #     echo "Description: A dummy package for testing" >> dummy_package/DEBIAN/control
-
-      # - name: Create dummy executable
-      #   run: |
-      #     echo "#!/bin/bash" > dummy_package/usr/local/bin/dummy
-      #     echo "echo \"This is a dummy package\"" >> dummy_package/usr/local/bin/dummy
-      #     chmod +x dummy_package/usr/local/bin/dummy
-
-      # - name: Build dummy package
-      #   run: |
-      #     dpkg-deb --build dummy_package
-      #     mv dummy_package.deb ${{ env.pkg_name }}
-      #     mkdir -p release
-      #     cp ${{ env.pkg_name }} release
-
       - name: Check for output files
         run: |
           set -e
