@@ -13,6 +13,9 @@ SDK_VER=10.0.0
 DOCKER_TAG=vision-apps-builder:${SDK_VER}-${ARCH}-${BASE_IMAGE//:/}
 echo "DOCKER_TAG = $DOCKER_TAG"
 
+# target SOC
+: "${SOC:=j784s4}"
+
 if [ "$#" -lt 1 ]; then
     CMD=/bin/bash
 else
@@ -27,6 +30,7 @@ docker run -it --rm \
     --network host \
     --env USE_PROXY=$USE_PROXY \
     --env BASE_IMAGE=$BASE_IMAGE \
+    --env SOC=$SOC \
     $DOCKER_TAG $CMD
 fi
 
@@ -39,5 +43,6 @@ docker run -it --rm \
     --env USE_PROXY=$USE_PROXY \
     --env ARCH=$ARCH \
     --env BASE_IMAGE=$BASE_IMAGE \
+    --env SOC=$SOC \
       $DOCKER_TAG $CMD
 fi

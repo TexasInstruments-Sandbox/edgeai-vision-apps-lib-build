@@ -130,6 +130,8 @@ if [ ! -d $WORKAREA ]; then
     copy_and_backup patches/vision_apps/utils/opengl/src/a72/concerto.mak ${WORKAREA}/vision_apps/utils/opengl/src/a72/concerto.mak
     # add vision_apps_build_all_platforms.sh
     copy_and_backup scripts/vision_apps_build_all_platforms.sh ${WORKAREA}/sdk_builder/vision_apps_build_all_platforms.sh
+    # add vision_apps_build_all_platforms.sh
+    copy_and_backup scripts/vision_apps_build.sh ${WORKAREA}/sdk_builder/vision_apps_build.sh
 
     # download and install PSDK Linux target FS and boot image
     if [ "$ARCH" == "amd64" ]; then

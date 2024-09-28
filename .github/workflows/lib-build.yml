@@ -15,13 +15,22 @@ on:
       soc:
         required: true
         type: string
+      cpu:
+        required: true
+        type: string
     secrets:
       env_PAT:
+        required: true
+      gh_TOKEN:
         required: true
 
 jobs:
   build:
     runs-on: ubuntu-22.04
+
+    # outputs:
+    #   pkg_name: ${{ steps.set_env.outputs.pkg_name }}
+    #   pkg_path: ${{ steps.set_env.outputs.pkg_path }}
 
     steps:
       - name: Checkout repository
@@ -31,12 +40,6 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
-
-      # - name: Install QEMU
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y qemu binfmt-support qemu-user-static
-      #     docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -49,61 +52,139 @@ jobs:
           password: ${{ secrets.env_PAT }}
 
       - name: Set environment variables
+        id: set_env
         run: |
           base_image=${{ inputs.base_image }}
           docker_tag=vision-apps-builder:${{ inputs.sdk_ver }}-${{ inputs.arch }}-${base_image//:/}
           remote_docker_tag=ghcr.io/${{ github.repository_owner }}/$docker_tag
           remote_docker_tag=${remote_docker_tag,,}
+          pkg_name=libti-vision-apps-${{ inputs.soc }}_${{ inputs.sdk_ver }}-${base_image//:/}.deb
+          soc=${{ inputs.soc }}
+          soc_upper=${soc^^}
+          pkg_path=workarea/vision_apps/out/${soc_upper}/${{ inputs.cpu }}/LINUX/release/${pkg_name}
           echo "docker_tag=${docker_tag}" >> $GITHUB_ENV
           echo "remote_docker_tag=${remote_docker_tag}" >> $GITHUB_ENV
+          echo "pkg_name=${pkg_name}" >> $GITHUB_ENV
+          echo "pkg_path=${pkg_path}" >> $GITHUB_ENV
 
-      - name: Pull Docker image
+          # # Set outputs for the release job
+          # echo "::set-output name=pkg_name::${pkg_name}"
+          # echo "::set-output name=pkg_path::${pkg_path}"
+
+      # - name: Pull and tag Docker image
+      #   run: |
+      #     set -e
+      #     docker pull $remote_docker_tag || { echo "Failed to pull Docker image."; exit 1; }
+      #     docker tag $remote_docker_tag $docker_tag
+      #     docker images
+
+      # - name: Install repo tool
+      #   run: |
+      #     set -e
+      #     mkdir -p ~/bin
+      #     export PATH="${HOME}/bin:${PATH}"
+      #     curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+      #     chmod a+rx ~/bin/repo
+      #     sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+
+      # - name: Install source repos
+      #   run: |
+      #     set -e
+      #     export PATH="${HOME}/bin:${PATH}"
+      #     ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} ./init_setup.sh
+
+      # - name: Build the vision-apps lib
+      #   run: |
+      #     set -e
+      #     # Remove '-it' in docker-run command in docker_run.sh
+      #     sed -i.bak 's/docker run -it --rm \\/docker run --rm --platform linux\/arm64 \\/' docker_run.sh
+      #     # Build the vision-apps lib
+      #     ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} SOC=${{ inputs.soc }} ./docker_run.sh ./vision_apps_build.sh
+
+      - name: Create dummy package directory structure
         run: |
-          docker pull $remote_docker_tag
-          docker tag $remote_docker_tag $docker_tag
-          docker images
+          mkdir -p dummy_package/DEBIAN
+          mkdir -p dummy_package/usr/local/bin
 
-      - name: Install repo tool
+      - name: Create control file
         run: |
-          mkdir -p ~/bin
-          export PATH="${HOME}/bin:${PATH}"
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-          chmod a+rx ~/bin/repo
-          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+          echo "Package: dummy-package" > dummy_package/DEBIAN/control
+          echo "Version: 1.0" >> dummy_package/DEBIAN/control
+          echo "Section: base" >> dummy_package/DEBIAN/control
+          echo "Priority: optional" >> dummy_package/DEBIAN/control
+          echo "Architecture: all" >> dummy_package/DEBIAN/control
+          echo "Maintainer: Your Name <youremail@example.com>" >> dummy_package/DEBIAN/control
+          echo "Description: A dummy package for testing" >> dummy_package/DEBIAN/control
 
-      - name: Check repo file permissions
-        run: ls -l ~/bin/repo
-
-      - name: Check Python version
-        run: python --version
-
-      - name: Install source repos
+      - name: Create dummy executable
         run: |
-          export PATH="${HOME}/bin:${PATH}"
-          ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} ./init_setup.sh
+          echo "#!/bin/bash" > dummy_package/usr/local/bin/dummy
+          echo "echo \"This is a dummy package\"" >> dummy_package/usr/local/bin/dummy
+          chmod +x dummy_package/usr/local/bin/dummy
 
-      - name: Build the vision-apps lib
+      - name: Build dummy package
         run: |
-          cmd="SOC=${{ inputs.soc }} GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build"
-          echo "cmd=${cmd}"
-          # remove '-it' in docker-run command in the docker_run.sh
-          sed -i 's/docker run -it --rm \\/docker run --rm --platform linux\/arm64 \\/' docker_run.sh
-          # build the vision-apps lib
-          ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} ./docker_run.sh "${cmd}"
+          dpkg-deb --build dummy_package
+          mv dummy_package.deb ${{ env.pkg_name }}
+          mkdir -p release
+          cp ${{ env.pkg_name }} release
 
-      - name: Check the vision-apps.so
+      - name: Check for output files
         run: |
-          find workarea/vision_apps/out --name "*.so"
+          set -e
+          # find workarea/vision_apps/out -name "libtivision_apps*.so" || { echo "Shared object not found."; exit 1; }
+          # find workarea/vision_apps/out -name "libti-vision-apps*.deb" || { echo "Deb package not found."; exit 1; }
+          find release -name "libti-vision-apps*.deb" || { echo "Deb package not found."; exit 1; }
 
-      - name: Package .deb
-        run: |
-          base_image=${{ inputs.base_image }}
-          cmd="SOC=${{ inputs.soc }} PKG_DIST=${base_image//:/} make deb_package"
-          echo "cmd=${cmd}"
-          ARCH=${{ inputs.arch }} BASE_IMAGE=${{ inputs.base_image }} ./docker_run.sh ${cmd}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.pkg_name }}
+          path: release
+          # path: ${{ env.pkg_path }}
 
-      - name: Check the vision-apps.deb
-        run: |
-          find workarea/vision_apps/out --name "*.deb"
+  # release:
+  #   needs: build
+  #   runs-on: ubuntu-22.04
 
+  #   env:
+  #     pkg_name: ${{ needs.build.outputs.pkg_name }}
+  #     pkg_path: ${{ needs.build.outputs.pkg_path }}
 
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Get the most recent tag
+  #       id: get_tag
+  #       run: echo "::set-output name=tag::$(git describe --tags)"
+
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: ${{ env.pkg_name }}
+  #         path: release
+
+  #     - name: Check for downloaded artifact
+  #       run: ls -R release
+
+  #     # - name: Create GitHub Release
+  #     #   id: create_release
+  #     #   uses: actions/create-release@v1
+  #     #   env:
+  #     #     GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+  #     #   with:
+  #     #     tag_name: ${{ steps.get_tag.outputs.tag }}
+  #     #     release_name: Release ${{ steps.get_tag.outputs.tag }}
+  #     #     draft: false
+  #     #     prerelease: false
+
+  #     # - name: Upload release asset
+  #     #   uses: actions/upload-release-asset@v1
+  #     #   env:
+  #     #     GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+  #     #   with:
+  #     #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+  #     #     asset_path: ${{ env.pkg_path }}
+  #     #     asset_name: ${{ env.pkg_name }}
+  #     #     asset_content_type: application/vnd.debian.binary

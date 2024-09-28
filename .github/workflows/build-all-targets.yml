@@ -18,52 +18,73 @@ jobs:
     uses: ./.github/workflows/lib-build.yml
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
+      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
       soc: j784s4
+      cpu: A72
 
-  # build_am68a:
-  #   needs: docker_build
-  #   uses: ./.github/workflows/lib-build.yml
-  #   secrets:
-  #     env_PAT: ${{ secrets.GHCR_PAT }}
-  #   with:
-  #     arch: arm64
-  #     base_image: "ubuntu:22.04"
-  #     sdk_ver: 10.0.0
-  #     soc: j721s2
+  build_am68a:
+    # needs: docker_build
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: 10.0.0
+      soc: j721s2
+      cpu: A72
 
-  # build_tda4vm:
-  #   needs: docker_build
-  #   uses: ./.github/workflows/lib-build.yml
-  #   secrets:
-  #     env_PAT: ${{ secrets.GHCR_PAT }}
-  #   with:
-  #     arch: arm64
-  #     base_image: "ubuntu:22.04"
-  #     sdk_ver: 10.0.0
-  #     soc: j721e
+  build_tda4vm:
+    # needs: docker_build
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: 10.0.0
+      soc: j721e
+      cpu: A72
 
-  # build_am67a:
-  #   needs: docker_build
-  #   uses: ./.github/workflows/lib-build.yml
-  #   secrets:
-  #     env_PAT: ${{ secrets.GHCR_PAT }}
-  #   with:
-  #     arch: arm64
-  #     base_image: "ubuntu:22.04"
-  #     sdk_ver: 10.0.0
-  #     soc: j722s
+  build_am67a:
+    # needs: docker_build
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: 10.0.0
+      soc: j722s
+      cpu: A53
 
-  # build_am62a:
-  #   needs: docker_build
-  #   uses: ./.github/workflows/lib-build.yml
-  #   secrets:
-  #     env_PAT: ${{ secrets.GHCR_PAT }}
-  #   with:
-  #     arch: arm64
-  #     base_image: "ubuntu:22.04"
-  #     sdk_ver: 10.0.0
-  #     soc: am62a
+  build_am62a:
+    # needs: docker_build
+    uses: ./.github/workflows/lib-build.yml
+    secrets:
+      env_PAT: ${{ secrets.GHCR_PAT }}
+      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: 10.0.0
+      soc: am62a
+      cpu: A53
+
+  release:
+    uses: ./.github/workflows/release.yml
+    needs: build_am69a, build_am68a, build_tda4vm, build_am67a, build_am62a
+    secrets:
+      gh_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      arch: arm64
+      base_image: "ubuntu:22.04"
+      sdk_ver: 10.0.0
+
