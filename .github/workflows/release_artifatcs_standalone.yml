@@ -46,6 +46,7 @@ jobs:
         with:
           path: release
           github-token: ${{ secrets.GHCR_PAT }}
+          repository: junechul/vision-apps-lib-build
           run-id: 11089150640
 
       - name: Check for downloaded artifacts
