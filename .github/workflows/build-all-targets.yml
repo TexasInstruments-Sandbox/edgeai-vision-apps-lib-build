@@ -1,4 +1,4 @@
-name: build-all-targets
+name: build-all-targets top
 
 on:
   workflow_dispatch:

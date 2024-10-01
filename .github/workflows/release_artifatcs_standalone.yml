@@ -1,17 +1,7 @@
-name: release reusable
+name: release artifacts standalone
 
 on:
-  workflow_call:
-    inputs:
-      arch:
-        required: true
-        type: string
-      sdk_ver:
-        required: true
-        type: string
-    secrets:
-      gh_TOKEN:
-        required: true
+  workflow_dispatch:
 
 jobs:
   release:
@@ -28,7 +18,7 @@ jobs:
         run: |
           release_tag=$(git describe --tags --abbrev=0)
           echo "release_tag=${release_tag}" >> $GITHUB_ENV
-          sdk_ver=${{ inputs.sdk_ver }}
+          sdk_ver=10.0.0
           # base_images
           base_images=(
             ubuntu:22.04
@@ -55,6 +45,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: release
+          github-token: ${{ secrets.GHCR_PAT }}
+          run-id: 11089150640
 
       - name: Check for downloaded artifacts
         run: ls -R release
@@ -63,7 +55,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           tag_name: ${{ env.release_tag }}
           release_name: ${{ env.release_tag }}
@@ -81,7 +73,7 @@ jobs:
       - name: Upload libti-vision-apps-j784s4-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j784s4_ubuntu22-04 }}/${{ env.pkg_j784s4_ubuntu22-04 }}
@@ -91,7 +83,7 @@ jobs:
       - name: Upload libti-vision-apps-j721s2-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j721s2_ubuntu22-04 }}/${{ env.pkg_j721s2_ubuntu22-04 }}
@@ -101,7 +93,7 @@ jobs:
       - name: Upload libti-vision-apps-j721e-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j721e_ubuntu22-04 }}/${{ env.pkg_j721e_ubuntu22-04 }}
@@ -111,7 +103,7 @@ jobs:
       - name: Upload libti-vision-apps-j722s-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j722s_ubuntu22-04 }}/${{ env.pkg_j722s_ubuntu22-04 }}
@@ -121,7 +113,7 @@ jobs:
       - name: Upload libti-vision-apps-am62a-ubuntu22-04 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_am62a_ubuntu22-04 }}/${{ env.pkg_am62a_ubuntu22-04 }}
@@ -132,7 +124,7 @@ jobs:
       - name: Upload libti-vision-apps-j784s4-debian12-5 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j784s4_debian12-5 }}/${{ env.pkg_j784s4_debian12-5 }}
@@ -142,7 +134,7 @@ jobs:
       - name: Upload libti-vision-apps-j721s2-debian12-5 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j721s2_debian12-5 }}/${{ env.pkg_j721s2_debian12-5 }}
@@ -152,7 +144,7 @@ jobs:
       - name: Upload libti-vision-apps-j721e-debian12-5 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j721e_debian12-5 }}/${{ env.pkg_j721e_debian12-5 }}
@@ -162,7 +154,7 @@ jobs:
       - name: Upload libti-vision-apps-j722s-debian12-5 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_j722s_debian12-5 }}/${{ env.pkg_j722s_debian12-5 }}
@@ -172,7 +164,7 @@ jobs:
       - name: Upload libti-vision-apps-am62a-debian12-5 to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.gh_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release/${{ env.pkg_am62a_debian12-5 }}/${{ env.pkg_am62a_debian12-5 }}
