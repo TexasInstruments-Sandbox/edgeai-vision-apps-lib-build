@@ -1,10 +1,10 @@
-Vision-Apps Library Build in Target Docker Container
-====================================================
+Vision-Apps Library Build for Target Ubuntu/Debian
+==================================================
 
-Docker-based build system for vision_apps library (extendable to other PSDK-RTOS components). Supported use cases include:
+Docker-based build system for Vision-Apps library. Supported use cases include:
 - **Case 1**: Compiling with the native GCC in arm64v8 Ubuntu Docker container directly on aarch64 build machine
 - **Case 2**: Compiling with the native GCC in arm64v8 Ubuntu Docker container on x86_64 machine using QEMU
-- **Case 3**: Cross-compiling on x86_64 build machine in Ubuntu Docker container
+- **Case 3** (Experimental): Cross-compiling on x86_64 build machine in Ubuntu Docker container
 
 <table>
   <tr>
@@ -52,7 +52,7 @@ git config --global user.email "you@example.com"
 
 ### edgeai-ti-proxy (only required to make the build system work in TI proxy network)
 
-Set up `edgeai-ti-proxy` ([repo link](https://bitbucket.itg.ti.com/projects/PROCESSOR-SDK-VISION/repos/edgeai-ti-proxy/browse))
+Set up `edgeai-ti-proxy` git repository (TI-internal only)
 
 Before docker-build or docker-run, please make sure sourcing `edgeai-ti-proxy/setup_proxy.sh`, which will define the `USE_PROXY` env variable and all the proxy settings for the TI network.
 
@@ -162,12 +162,7 @@ where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
 
 ### setup_psdk_rtos.sh
 
-From `sdk_builder/scripts/setup_psdk_rtos.sh`, following scripts are extracted. In this project a couple of the scripts are selectively executed during `init_setup.sh`.
-
-- `setup_tools_apt.sh`: this is now integrated into the Dockerfile.
-- `setup_tools_arm.sh`
-- `setup_tools_cgt.sh`
-- `setup_tools_misc.sh`
+From `sdk_builder/scripts/setup_psdk_rtos.sh`, all the `apt` packages are installed in Dockerfile and `setup_tools_arm.sh` scripts is extracted and used for CASE 3  during `init_setup.sh`.
 
 ### AR Flags
 With the default Concerto compiler settings, the following warning messages show up around every static .a library.
@@ -192,20 +187,4 @@ $(_MODULE)_LINK_LIB   := $(AR) -rsc $($(_MODULE)_BIN) $($(_MODULE)_OBJS)
     - apt-get install `libGLESv2`, `libEGL`, `libgbm`
 - Additional library and include paths are added. Please see [`patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak`](patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak)
 - A few missing header files are copied from targetfs right after docker-run. Please see [`entrypoint.sh`](entrypoint.sh).
-
-## Trial Results
-
-QEMU is slower than building directly on SK-AM69A.
-
-| Target Ubuntu distro | Results  |
-| -------------------- | -------- |
-| Ubuntu 22.04         | vision_apps.so successfully built. |
-| Ubuntu 20.04         | vision_apps.so successfully built. |
-
-
-- Was able to build `vision_apps.so` and all the conformance tests defined in yocto_build rule in aarch64 Ubuntu 20.04 container on AM69A-SK board (the same thing should work using QEMU on x86_64 in Docker container).
-
-- Resulting `vision_app.so` was verified in Ubuntu 20.04 container on TDA4VM-SK: `perf_stats` tool was built and run successfully (which was not possible when using vision_apps.so copied from Yocto target FS).
-
-- Was able to build most of dependency in Robotics SDK ROS1 container except dl_infefer and gst_plugins as we do not yet have OS-RT libs built for the Ubuntu container.
 
