@@ -1,7 +1,7 @@
 Vision-Apps Library Build for Target Ubuntu/Debian
 ==================================================
 
-Docker-based build system for Vision-Apps library. Supported use cases include:
+This build system covers building the Vision-Apps Linux library for Ubuntu/Debian systems running on TI's EdgeAI processors (TDA4VM, AM62A, AM67A, AM68A, and AM69A). Supported use cases include:
 - **Case 1**: Compiling with the native GCC in arm64v8 Ubuntu Docker container directly on aarch64 build machine
 - **Case 2**: Compiling with the native GCC in arm64v8 Ubuntu Docker container on x86_64 machine using QEMU
 - **Case 3** (Experimental): Cross-compiling on x86_64 build machine in Ubuntu Docker container
@@ -9,7 +9,7 @@ Docker-based build system for Vision-Apps library. Supported use cases include:
 <table>
   <tr>
     <td>
-      <img src="docs/diagram_aarch64_container.png" alt="Image 2" style="width: 383px;"/>
+      <img src="docs/diagram_aarch64_container.png" alt="Image 2" style="width: 403px;"/>
       <br>
       <center><em>CASE 1 and CASE 2 with aarch64 Container</em></center>
     </td>

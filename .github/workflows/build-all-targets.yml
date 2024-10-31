@@ -84,7 +84,7 @@ jobs:
       soc: am62a
       cpu: A53
 
-  ## Library build: Debian 12.54
+  ## Library build: Debian 12.5
   build_am69a_debian12-5:
     needs: docker_build_debian12-5
     uses: ./.github/workflows/lib-build.yml
