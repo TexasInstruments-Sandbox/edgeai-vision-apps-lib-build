@@ -2,6 +2,7 @@ ARG ARCH
 ARG BASE_IMAGE
 ARG USE_PROXY
 ARG HTTP_PROXY
+ARG RPMSG_VER
 ARG DEBIAN_FRONTEND=noninteractive
 
 #=========================================================================
@@ -19,6 +20,7 @@ ENV https_proxy=${HTTP_PROXY}
 FROM base-${USE_PROXY}
 ARG ARCH
 ARG BASE_IMAGE
+ARG RPMSG_VER
 ARG DEBIAN_FRONTEND
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
@@ -27,12 +29,6 @@ ENV LC_ALL=C.UTF-8
 ADD setup_proxy.sh /root/
 ADD proxy /root/proxy
 RUN /root/setup_proxy.sh
-
-# install python packages
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     python3-pip && \
-#     python3 -m pip install --upgrade pip && \
-#     rm -rf /var/lib/apt/lists/*
 
 # intsall utils and miscellaneous packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -99,13 +95,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fi && \
     rm -rf /var/lib/apt/lists/*
 
-# Somehow keep retrying to connect pypi.python.org in TI network then time out
-# Not working in Debian container
-# RUN python3 -m pip install \
-#     pycryptodomex \
-#     meson \
-#     jsonschema
-
 # install libGLESv2, libEGL, libgbm-dev, libglm-dev, libdrm-dev
 RUN if [ "${ARCH}" = "arm64" ]; then \
         apt-get update && apt-get install -y --no-install-recommends \
@@ -120,7 +109,7 @@ RUN if [ "${ARCH}" = "arm64" ]; then \
 # build and install ti-rpmsg-char
 WORKDIR /opt
 RUN if [ "${ARCH}" = "arm64" ]; then \
-        git clone git://git.ti.com/rpmsg/ti-rpmsg-char.git && \
+    git clone git://git.ti.com/rpmsg/ti-rpmsg-char.git --branch ${RPMSG_VER} --depth 1 --single-branch && \
         cd /opt/ti-rpmsg-char && \
         autoreconf -i && ./configure --host=aarch64-none-linux-gnu --prefix=/usr && \
         make && make install && \
