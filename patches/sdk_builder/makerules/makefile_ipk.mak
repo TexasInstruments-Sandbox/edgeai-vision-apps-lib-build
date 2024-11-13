@@ -24,7 +24,6 @@ J7_IP_ADDRESS       ?= 192.168.999.999
 
 # Return the last word after a '/'.
 # ex: <some_dir_path>/REPO/tidl_j7_xx_yy_zz_ww will give tidl_j7_xx_yy_zz_ww
-TIDL_PATH=$(PSDK_PATH)/tidl_j7
 tidl_dir = $(notdir $(TIDL_PATH))
 
 # Use this to use ALL headers in the component folders
@@ -59,7 +58,7 @@ ifeq ($(BUILD_PTK),yes)
 IPK_INCLUDE_FOLDERS += ti-perception-toolkit/include
 endif
 
-ifeq ($(SOC), $(filter $(SOC),j721e j721s2 j784s4))
+ifeq ($(SOC), $(filter $(SOC),j721e j721s2 j784s4 j742s2))
 IPK_INCLUDE_FOLDERS += tiadalg
 endif
 

@@ -11,7 +11,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "ubuntu:22.04"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
 
   docker_build_debian12-5:
     uses: ./.github/workflows/docker-build.yml
@@ -19,7 +19,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "debian:12.5"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
 
   ## Library build: Ubuntu 22.04
   build_am69a_ubuntu22-04:
@@ -29,7 +29,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "ubuntu:22.04"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j784s4
       cpu: A72
 
@@ -40,7 +40,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "ubuntu:22.04"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j721s2
       cpu: A72
 
@@ -51,7 +51,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "ubuntu:22.04"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j721e
       cpu: A72
 
@@ -62,7 +62,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "ubuntu:22.04"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j722s
       cpu: A53
 
@@ -73,7 +73,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "ubuntu:22.04"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: am62a
       cpu: A53
 
@@ -85,7 +85,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "debian:12.5"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j784s4
       cpu: A72
 
@@ -96,7 +96,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "debian:12.5"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j721s2
       cpu: A72
 
@@ -107,7 +107,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "debian:12.5"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j721e
       cpu: A72
 
@@ -118,7 +118,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "debian:12.5"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: j722s
       cpu: A53
 
@@ -129,7 +129,7 @@ jobs:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
       base_image: "debian:12.5"
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
       soc: am62a
       cpu: A53
 
@@ -150,5 +150,5 @@ jobs:
     secrets:
       gh_TOKEN: ${{ secrets.GHCR_PAT }}
     with:
-      sdk_ver: 10.0.0
+      sdk_ver: 10.1.0
 
