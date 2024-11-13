@@ -10,7 +10,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
 
@@ -19,7 +18,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "debian:12.5"
       sdk_ver: 10.0.0
 
@@ -30,7 +28,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
       soc: j784s4
@@ -42,7 +39,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
       soc: j721s2
@@ -54,7 +50,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
       soc: j721e
@@ -66,7 +61,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
       soc: j722s
@@ -78,7 +72,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "ubuntu:22.04"
       sdk_ver: 10.0.0
       soc: am62a
@@ -91,7 +84,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "debian:12.5"
       sdk_ver: 10.0.0
       soc: j784s4
@@ -103,7 +95,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "debian:12.5"
       sdk_ver: 10.0.0
       soc: j721s2
@@ -115,7 +106,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "debian:12.5"
       sdk_ver: 10.0.0
       soc: j721e
@@ -127,7 +117,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "debian:12.5"
       sdk_ver: 10.0.0
       soc: j722s
@@ -139,7 +128,6 @@ jobs:
     secrets:
       env_PAT: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       base_image: "debian:12.5"
       sdk_ver: 10.0.0
       soc: am62a
@@ -162,6 +150,5 @@ jobs:
     secrets:
       gh_TOKEN: ${{ secrets.GHCR_PAT }}
     with:
-      arch: arm64
       sdk_ver: 10.0.0
 

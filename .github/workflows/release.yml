@@ -3,9 +3,6 @@ name: release reusable
 on:
   workflow_call:
     inputs:
-      arch:
-        required: true
-        type: string
       sdk_ver:
         required: true
         type: string
