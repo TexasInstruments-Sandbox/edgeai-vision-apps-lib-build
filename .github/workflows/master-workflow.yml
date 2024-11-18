@@ -1,4 +1,4 @@
-name: build-all-targets top
+name: master-workflow top
 
 on:
   workflow_dispatch:

@@ -23,8 +23,6 @@ Supported use cases include:
 
 Pull the baseline Docker image needed. Assuming outside of a proxy network,
 ```bash
-docker pull ubuntu:22.04
-docker pull ubuntu:20.04
 docker pull arm64v8/ubuntu:22.04
 docker pull arm64v8/ubuntu:20.04
 docker pull arm64v8/debian:12.5
@@ -53,14 +51,6 @@ Set up `edgeai-ti-proxy` git repository (TI-internal only)
 Before docker-build or docker-run, please make sure sourcing `edgeai-ti-proxy/setup_proxy.sh`, which will define the `USE_PROXY` env variable and all the proxy settings for the TI network.
 
 ## CASE 1 & 2: Compiling with the native GCC in arm64v8 Ubuntu Docker container
-
-Build systems:
-1. In arm64v8 Ubuntu Docker container using QEMU on x86_64 machine
-2. In arm64v8 Ubuntu Docker container on aarch64 target
-
-Target for lib deployment:
-1. arm64v8 Ubuntu 20.04 Docker container
-2. arm64v8 Ubuntu 22.04 Docker container
 
 ### initial setup: install source repos
 

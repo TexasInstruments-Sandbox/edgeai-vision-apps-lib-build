@@ -14,3 +14,6 @@ GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=
 
 # package
 PKG_DIST=${BASE_IMAGE//:/} TIDL_PATH=/opt/psdk-rtos/workarea/tidl_j7 make deb_package
+
+# chmod
+chmod -R a+w $WORK_DIR/workarea
