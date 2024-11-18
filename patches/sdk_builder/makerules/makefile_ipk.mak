@@ -82,6 +82,7 @@ ipk: ipk_package ipk_prepare_repo
 
 # package tivision_apps into .ipk (creates in $TARGET_OUT path)
 ipk_package: linux_fs_install
+	@echo "TIDL_PATH: $(TIDL_PATH)"
 	@rm -rf $(VISION_APPS_TMP_PATH)
 
 	# Get .so libs for ipk package

@@ -109,12 +109,12 @@ where `platform_name=[j721e|j721s2|j722s|j784s4|am62a]`.
 `vision_apps.so` location:
 `workarea/vision_apps/out/${SOC}/A72/LINUX/release/libtivision_apps.so.${PSDK_VERSION}`
 
-### Debian packaging (Exprimental) in the container
+### Debian packaging (Experimental) in the container
 
 ```bash
-SOC=<platform_name> PKG_DIST=ubuntu22.04 make deb_package
-SOC=<platform_name> PKG_DIST=ubuntu20.04 make deb_package
-SOC=<platform_name> PKG_DIST=debian12.5 make deb_package
+SOC=<platform_name> PKG_DIST=ubuntu22.04 TIDL_PATH=/opt/psdk-rtos/workarea/tidl_j7 make deb_package
+SOC=<platform_name> PKG_DIST=ubuntu20.04 TIDL_PATH=/opt/psdk-rtos/workarea/tidl_j7 make deb_package
+SOC=<platform_name> PKG_DIST=debian12.5 TIDL_PATH=/opt/psdk-rtos/workarea/tidl_j7make deb_package
 ```
 
 The resulting Debian package is located:

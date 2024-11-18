@@ -25,7 +25,7 @@ for platform in ${platforms[@]}; do
     SOC=$platform GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 
     # package
-    SOC=$platform PKG_DIST=$distro make deb_package
+    SOC=$platform PKG_DIST=$distro TIDL_PATH=/opt/psdk-rtos/workarea/tidl_j7 make deb_package
 
     # clean up
     SOC=$platform make yocto_clean

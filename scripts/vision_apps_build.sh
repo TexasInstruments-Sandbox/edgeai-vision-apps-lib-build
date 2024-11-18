@@ -13,4 +13,4 @@ fi
 GCC_LINUX_ARM_ROOT=/usr CROSS_COMPILE_LINARO= LINUX_SYSROOT_ARM=/ LINUX_FS_PATH=/ TREAT_WARNINGS_AS_ERROR=0 make yocto_build
 
 # package
-PKG_DIST=${BASE_IMAGE//:/} make deb_package
+PKG_DIST=${BASE_IMAGE//:/} TIDL_PATH=/opt/psdk-rtos/workarea/tidl_j7 make deb_package
