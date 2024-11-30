@@ -15,12 +15,12 @@ WORKAREA=$SCRIPT_DIR/workarea
 
 # pull the source repos
 # https://git.ti.com/cgit/processor-sdk/psdk_repo_manifests/refs/?h=main
-: "${REPO_TAG:=REL.PSDK.ANALYTICS.10.01.00.01}"
+: "${REPO_TAG:=REL.PSDK.ANALYTICS.10.01.00.02}"
 
 # targetfs and rootfs info
 # http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/${PSDK_LINUX_VERSION}
-# E.g.: http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-AM69A/10_01_00_01
-: "${PSDK_LINUX_VERSION:=10_01_00_01}"
+# E.g.: http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-AM69A/10_01_00_02
+: "${PSDK_LINUX_VERSION:=10_01_00_02}"
 
 # validate ARCH
 if [ "$ARCH" != "arm64" ]; then
@@ -33,8 +33,6 @@ save_env_vars() {
     output_file="sdk_variables.txt"
     env_vars=(
         "ARCH" "BASE_IMAGE" "REPO_TAG" "PSDK_LINUX_VERSION"
-        # "SOC" "DEVICE_NAME" "DEVICE_PLATFORM"
-        # "PSDK_LINUX_ROOTFS" "PSDK_LINUX_BOOTFS" "PSDK_LINUX_WEBLINK"
     )
     for var in "${env_vars[@]}"; do
         echo "$var=${!var}" >> $output_file
@@ -64,14 +62,6 @@ if [ ! -d $WORKAREA ]; then
     repo sync
 
     cd $SCRIPT_DIR
-    # remove the 'u' flag for AR to avoid warning messages in aarch64 Ubuntu container
-    copy_and_backup patches/sdk_builder/concerto/compilers/gcc_linux_arm.mak ${WORKAREA}/sdk_builder/concerto/compilers/gcc_linux_arm.mak
-    # rule for deb packing added (exprimental)
-    copy_and_backup patches/sdk_builder/makerules/makefile_ipk.mak ${WORKAREA}/sdk_builder/makerules/makefile_ipk.mak
-    # updated yocto_clean malkerule: removed tidl_tiovx_kernels_scrub and scrub (both are for arm-tidl)
-    copy_and_backup patches/sdk_builder/makerules/makefile_linux_arm.mak ${WORKAREA}/sdk_builder/makerules/makefile_linux_arm.mak
-    # adding /usr/include/libdrm to IDIRS (for Debian container)
-    copy_and_backup patches/vision_apps/utils/opengl/src/a72/concerto.mak ${WORKAREA}/vision_apps/utils/opengl/src/a72/concerto.mak
     # add vision_apps_build_all_platforms.sh
     copy_and_backup scripts/vision_apps_build_all_platforms.sh ${WORKAREA}/sdk_builder/vision_apps_build_all_platforms.sh
     # add vision_apps_build_all_platforms.sh
