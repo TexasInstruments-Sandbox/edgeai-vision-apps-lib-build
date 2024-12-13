@@ -15,12 +15,12 @@ WORKAREA=$SCRIPT_DIR/workarea
 
 # pull the source repos
 # https://git.ti.com/cgit/processor-sdk/psdk_repo_manifests/refs/?h=main
-: "${REPO_TAG:=REL.PSDK.ANALYTICS.10.01.00.03}"
+: "${REPO_TAG:=REL.PSDK.ANALYTICS.10.01.00.04}"
 
 # targetfs and rootfs info
 # http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-${DEVICE_NAME}/${PSDK_LINUX_VERSION}
 # E.g.: http://edgeaisrv2.dhcp.ti.com/publish/prod/PROCESSOR-SDK-LINUX-AM69A/10_01_00_03
-: "${PSDK_LINUX_VERSION:=10_01_00_03}"
+: "${PSDK_LINUX_VERSION:=10_01_00_04}"
 
 # validate ARCH
 if [ "$ARCH" != "arm64" ]; then
